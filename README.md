@@ -52,6 +52,7 @@
 
 - **后端**：`netlify/functions/ask/ask.mjs`，部署在 Netlify，接口是 `/api/ask`。它调用 Claude API，只根据客服手册回答，每条回答附章节出处，适合时附一段可直接发给学员的回复。
 - **手册资料自动同步**：Netlify 每次部署都会从 `content/` 重新整理手册（`tools/build_handbook.mjs`）。Netlify 连接了这个 GitHub 仓库时，改完内容会自动重新部署，助手也跟着更新。
+- **接口地址**：`index.html` 开头的 `window.ASSISTANT_ENDPOINT`，目前是 `https://shuyi-assistant.netlify.app/api/ask`（Netlify 项目 shuyi-assistant）。
 - **离线模式**：`index.html` 里的 `window.ASSISTANT_ENDPOINT` 留空，或者后端连不上时，助手改用内置的关键词库，并按全站搜索推荐相关章节。
 - **Netlify 环境变量**（Site configuration → Environment variables，作用范围要包含 Functions）：
 
