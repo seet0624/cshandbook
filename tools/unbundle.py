@@ -58,8 +58,12 @@ def fetch(url):
 def main():
     if len(sys.argv) < 2:
         sys.exit(__doc__)
-    bundle = Path(sys.argv[1])
-    out = Path(sys.argv[2]) if len(sys.argv) > 2 else Path(__file__).resolve().parent.parent
+    args = [a for a in sys.argv[1:] if a != "--force"]
+    bundle = Path(args[0])
+    out = Path(args[1]) if len(args) > 1 else Path(__file__).resolve().parent.parent
+    if (out / "content").is_dir() and "--force" not in sys.argv:
+        sys.exit("内容已经拆到 content/ 目录，导出文件里的 index.html 还是旧的内嵌内容，直接覆盖会\n"
+                 "把 content/ 的修改全部丢掉。确定要用导出文件整体替换时加 --force。")
     src = bundle.read_text(encoding="utf-8")
 
     manifest = script_block(src, "manifest")

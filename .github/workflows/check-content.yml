@@ -1,0 +1,19 @@
+# 每次改动内容文件后自动检查；有问题时这次提交会显示红叉，GitHub 会发邮件给提交的人。
+name: 检查内容
+
+on:
+  push:
+    paths: ['content/**', 'index.html', '服务中心判定器.dc.html', 'tools/check_content.mjs']
+  pull_request:
+    paths: ['content/**', 'index.html', '服务中心判定器.dc.html', 'tools/check_content.mjs']
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node tools/check_content.mjs
