@@ -1,0 +1,18 @@
+# 纯静态站，无需构建；全站由 netlify/edge-functions/basic-auth.ts 加密码保护。
+[build]
+  publish = "."
+
+# 内部站点，不让搜索引擎收录
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "same-origin"
+
+# 字体、图片、运行时基本不变，浏览器缓存一周
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"

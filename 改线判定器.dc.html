@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div style="border:1px solid var(--line);background:var(--card);display:grid;grid-template-columns:minmax(240px,300px) 1fr;gap:0">
+  <div style="padding:22px 20px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:18px">
+    <div>
+      <div style="font-family:var(--serif);font-weight:700;font-size:13px;color:var(--gold-deep);letter-spacing:.08em;margin-bottom:9px">1 · 操作范围</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <button onClick="{{ setNew }}" style="{{ bNew }}">改去新团队（改团队申请）</button>
+        <button onClick="{{ setIn }}" style="{{ bIn }}">团队内部调整</button>
+        <button onClick="{{ setAcct }}" style="{{ bAcct }}">自己户口 1 ↔ 户口 2</button>
+      </div>
+    </div>
+    <div>
+      <div style="font-family:var(--serif);font-weight:700;font-size:13px;color:var(--gold-deep);letter-spacing:.08em;margin-bottom:9px">2 · 改什么</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <button onClick="{{ setInv }}" style="{{ bInv }}">仅改邀约人</button>
+        <button onClick="{{ setBoth }}" style="{{ bBoth }}">邀约人 ＋ 安置人</button>
+        <button onClick="{{ setPlace }}" style="{{ bPlace }}">只改安置人</button>
+        <button onClick="{{ setRet }}" style="{{ bRet }}">归还原邀约人</button>
+      </div>
+      <p style="margin:8px 0 0;font-size:11.5px;line-height:1.6;color:var(--ink-faint)">{{ naNote }}</p>
+    </div>
+    <div>
+      <div style="font-family:var(--serif);font-weight:700;font-size:13px;color:var(--gold-deep);letter-spacing:.08em;margin-bottom:9px">3 · 有业绩吗</div>
+      <div style="display:flex;gap:6px">
+        <button onClick="{{ setPY }}" style="{{ bPY }}">有业绩</button>
+        <button onClick="{{ setPN }}" style="{{ bPN }}">业绩 0</button>
+      </div>
+    </div>
+    <div>
+      <div style="font-family:var(--serif);font-weight:700;font-size:13px;color:var(--gold-deep);letter-spacing:.08em;margin-bottom:9px">4 · 归还多久（仅归还）</div>
+      <div style="display:flex;gap:6px">
+        <button onClick="{{ setL }}" style="{{ bL }}">未满半年</button>
+        <button onClick="{{ setG }}" style="{{ bG }}">超过半年</button>
+      </div>
+    </div>
+  </div>
+
+  <div style="padding:24px;background:linear-gradient(160deg,var(--card-2),var(--card))">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap;padding-bottom:12px;border-bottom:2px solid var(--gold)">
+      <h4 style="margin:0;font-family:var(--serif);font-weight:900;font-size:21px;color:var(--ink);line-height:1.3">{{ vTitle }}</h4>
+      <span style="font-family:var(--latin);font-weight:700;font-size:13px;color:#fff;background:var(--gold-deep);padding:3px 10px;white-space:nowrap">情形 {{ vCase }}</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin:18px 0">
+      <div style="background:var(--card);border:1px solid var(--line);border-top:2px solid var(--gold);padding:14px 16px">
+        <div style="font-family:var(--serif);font-size:12px;color:var(--gold-deep);letter-spacing:.08em;margin-bottom:5px">业绩清零</div>
+        <div style="font-family:var(--serif);font-weight:700;font-size:20px;color:var(--ink)">{{ vReset }}</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--line);border-top:2px solid var(--gold);padding:14px 16px">
+        <div style="font-family:var(--serif);font-size:12px;color:var(--gold-deep);letter-spacing:.08em;margin-bottom:5px">是否报价</div>
+        <div style="font-family:var(--serif);font-weight:700;font-size:20px;color:var(--ink)">{{ vQuote }}</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--line);border-top:2px solid var(--gold);padding:14px 16px">
+        <div style="font-family:var(--serif);font-size:12px;color:var(--gold-deep);letter-spacing:.08em;margin-bottom:5px">资格要求</div>
+        <div style="font-size:13px;line-height:1.6;color:var(--ink)">{{ vQual }}</div>
+      </div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--line);border-left:3px solid var(--gold);padding:14px 18px;margin-bottom:14px">
+      <div style="font-family:var(--serif);font-size:12px;color:var(--gold-deep);letter-spacing:.08em;margin-bottom:5px">需谁同意</div>
+      <div style="font-size:14px;line-height:1.75;color:var(--ink);white-space:pre-line">{{ vAgree }}</div>
+    </div>
+    <div style="background:var(--ink);color:#fff;padding:16px 18px">
+      <div style="font-family:var(--serif);font-size:12px;color:var(--gold-lt);letter-spacing:.08em;margin-bottom:7px">必须附上</div>
+      <div style="font-size:14px;line-height:1.85;white-space:pre-line">{{ vExtra }}</div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:900,&quot;height&quot;:560}}">
+class Component extends DCLogic {
+  state = { scope: 'in', change: 'inv', perf: 'y', ret: 'lt6' };
+  set(k, v) { return () => this.setState({ [k]: v }); }
+
+  effChange() {
+    const s = this.state;
+    if (s.scope === 'new' && (s.change === 'place' || s.change === 'ret')) return 'inv';
+    if (s.scope === 'acct' && s.change === 'ret') return 'inv';
+    return s.change;
+  }
+
+  btn(on, dis) {
+    const base = 'text-align:left;padding:10px 13px;font-size:13.5px;font-family:inherit;cursor:pointer;border:1px solid var(--line);line-height:1.4;transition:background .15s,border-color .15s;';
+    if (dis) return base + 'background:var(--card);color:var(--ink-faint);opacity:.45;pointer-events:none;';
+    if (on) return base + 'background:var(--ink);border-color:var(--ink);color:#fff;';
+    return base + 'background:var(--card);color:var(--ink);';
+  }
+
+  decide() {
+    const s = this.state;
+    const change = this.effChange();
+    const hasPerf = s.perf === 'y';
+    const qualTeam = '按实际团队资格判定（未买工具登记满半年，或已买工具满一年）';
+    const byQual = '符合资格 → 学员本人同意\n不符合资格 → 原邀约人同意';
+    let r = { kase: '', title: '', qual: qualTeam, agree: byQual, reset: '清零', quote: hasPerf ? '需报价' : '不报价', needOrig: change !== 'place', movesInv: change !== 'place' };
+
+    if (s.scope === 'new') {
+      r.kase = change === 'both' ? '1.2' : '1.1';
+      r.title = change === 'both' ? '改团队申请 · 邀约人＋安置人' : '改团队申请 · 仅改邀约人';
+      r.reset = '强制清零'; r.quote = '不报价';
+    } else if (s.scope === 'in') {
+      if (change === 'inv') { r.kase = '2.1a'; r.title = '团队内部 · 仅改邀约人'; r.reset = '清零'; }
+      else if (change === 'both') { r.kase = '2.2'; r.title = '团队内部 · 改邀约人＋安置人'; r.reset = '清零'; }
+      else if (change === 'place') { r.kase = '2.3'; r.title = '团队内部 · 只改安置人'; r.qual = '无资格要求'; r.agree = '无需同意，直接申请'; r.reset = '清零'; }
+      else {
+        r.kase = '2.1b'; r.title = '团队内部 · 归还原邀约人'; r.reset = '清零';
+        if (s.ret === 'lt6') { r.qual = '无资格要求（归还未满半年）'; r.agree = '无需同意（归还未满半年）'; r.reset = '不清零'; r.needOrig = false; }
+        else { r.agree = '学员本人 ＋ 原邀约人 双方同意'; }
+      }
+    } else {
+      r.needOrig = false; r.movesInv = false; r.qual = '无资格要求';
+      if (change === 'place') { r.kase = '3.2'; r.title = '自户口 · 安置人 户口1 → 户口2'; r.agree = '无需同意'; r.reset = '清零'; r.quote = '需报价'; }
+      else { r.kase = '3.1'; r.title = '自户口 · 推荐人 户口1 → 户口2'; r.agree = '无需同意'; r.reset = '不清零'; r.quote = '免费'; }
+    }
+
+    const extra = ['写明申请理由'];
+    if (r.movesInv) extra.push('新邀约人须已完款工具');
+    if (r.needOrig) extra.unshift('原邀约人同意');
+    if (r.needOrig && hasPerf) extra.unshift('上级批准 ＋ 前后系统截图');
+    if (r.agree.indexOf('学员本人') > -1) extra.push('学员本人确认截图（问介绍人）');
+    r.extra = extra.map((x, i) => (i + 1) + '. ' + x).join('\n');
+    return r;
+  }
+
+  renderVals() {
+    const s = this.state, r = this.decide();
+    const eq = this.effChange();
+    const disPlace = s.scope === 'new', disRet = s.scope !== 'in', disTime = eq !== 'ret';
+    const half = 'flex:1;';
+    return {
+      bNew: this.btn(s.scope === 'new'), bIn: this.btn(s.scope === 'in'), bAcct: this.btn(s.scope === 'acct'),
+      setNew: this.set('scope', 'new'), setIn: this.set('scope', 'in'), setAcct: this.set('scope', 'acct'),
+      bInv: this.btn(s.change === 'inv'), bBoth: this.btn(s.change === 'both'),
+      bPlace: this.btn(s.change === 'place', disPlace), bRet: this.btn(s.change === 'ret', disRet),
+      setInv: this.set('change', 'inv'), setBoth: this.set('change', 'both'), setPlace: this.set('change', 'place'), setRet: this.set('change', 'ret'),
+      bPY: this.btn(s.perf === 'y') + half, bPN: this.btn(s.perf === 'n') + half,
+      setPY: this.set('perf', 'y'), setPN: this.set('perf', 'n'),
+      bL: this.btn(s.ret === 'lt6', disTime) + half, bG: this.btn(s.ret === 'gt6', disTime) + half,
+      setL: this.set('ret', 'lt6'), setG: this.set('ret', 'gt6'),
+      naNote: s.scope === 'new' ? '改团队申请只涉及邀约人（可带安置人），其余两项不适用。'
+        : (s.scope === 'acct' ? '自户口调整只分推荐人与安置人，不涉及归还。' : '归还＝把邀约人改回原本那一位。'),
+      vTitle: r.title, vCase: r.kase, vQual: r.qual, vAgree: r.agree, vReset: r.reset, vQuote: r.quote, vExtra: r.extra
+    };
+  }
+}
+</script>
+</body>
+</html>
