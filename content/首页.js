@@ -14,6 +14,7 @@
 // 公告 · 更新提醒（显示在首页，最新的放最上面）
 //   tag：左边的小标签，比如 '更新 · 16.10.2023'、'制度'、'提醒'
 CS.announcements = [
+  { tag:'流程更新', text:'更换邀约人：服务中心后台已不能申请，改由学员本人填写申请表，用登记邮箱发到 csshuyi5796@gmail.com。每宗 RM600（获批后缴付），业绩及级别一律清零。', go:'rl-apply' },
   { tag:'更新 · 16.10.2023', text:'现货牌子发货新流程：不再发现货，统一有订单编号后，由客服通知服务中心才能发货；急用牌子请提早告知处理。', go:'lg-instock' },
   { tag:'制度', text:'后台下单期限：学员完款且手续齐全后，服务中心须在 3 个工作日内下单；逾期第一次暂停权限一个月，第二次永久停止。', go:'os-train' },
   { tag:'提醒', text:'订单审核时间为工作日 9:00–11:30，仅审核前一天已付款订单；通过审核的订单于当日 12:00 结算。', go:'hq-order' }
@@ -24,7 +25,7 @@ CS.announcements = [
 CS.quicklinks = [
   { title:'话术总库', sub:'全站统一口径', icon:'book-open', go:'phrases' },
   { title:'布告栏速查', sub:'物流 · 化解 · 费用', icon:'clipboard-list', go:'bd-logi' },
-  { title:'改邀约人／安置人', sub:'八种情形判定', icon:'user-round-check', go:'rl-rule' },
+  { title:'改邀约人／安置人', sub:'学员本人填表申请', icon:'user-round-check', go:'rl-apply' },
   { title:'停运编号对照', sub:'旧编号查现服务中心', icon:'users-round', go:'bd-team' },
   { title:'会员话术库', sub:'常问 Q&A', icon:'book-open', go:'hq-qam' },
   { title:'订单审核时间', sub:'9:00–11:30', icon:'clock', go:'hq-order' },
@@ -39,7 +40,7 @@ CS.tasks = [
   { t:'学员要买工具', s:'报价 · 下单 · 付款', icon:'shopping-bag', go:'os-train' },
   { t:'查工具工期', s:'算出交付日', icon:'clock', go:'os-leadtime' },
   { t:'货到了 / 要发货', s:'物流全流程', icon:'truck', go:'bd-logi' },
-  { t:'要改邀约人／安置人', s:'八种情形判定', icon:'user-round-check', go:'rl-rule' },
+  { t:'要改邀约人／安置人', s:'新申请流程 · RM600', icon:'user-round-check', go:'rl-apply' },
   { t:'学员问价格', s:'统一报价口径', icon:'tag', go:'hq-order' },
   { t:'服务中心要充电子币', s:'充值流程', icon:'coins', go:'hq-topup' },
   { t:'要报单 / 分单', s:'分配规则', icon:'list-checks', go:'hq-split' },
