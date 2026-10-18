@@ -63,6 +63,7 @@
   | `ASSISTANT_EFFORT` | 可选，默认 `low`（回答快）。可改成 `medium` |
   | `ALLOWED_ORIGINS` | 可选，默认 `https://seet0624.github.io`，只有这个网站能调用接口 |
 
+- **问题记录**：每次提问会在 Netlify 函数日志（Logs → Functions → ask）记一行 `[ask]`，内容是问题文字（电话、电邮、编号已自动遮掉）和引用的章节，用来了解同事怎么问、改进助手。日志保留时间按 Netlify 方案而定。
 - **防滥用**：每个 IP 每分钟最多 10 次、问题最长 500 字。接口地址是公开的，建议在 Anthropic Console 设置每月用量上限。
 
 ## 本地预览与检查

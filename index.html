@@ -35,8 +35,8 @@
  "flag_il": "assets/img/flags/il.png",
  "flag_ch": "assets/img/flags/ch.png",
  "flag_sa": "assets/img/flags/sa.png",
- "./%E6%94%B9%E7%BA%BF%E5%88%A4%E5%AE%9A%E5%99%A8.dc.html": "改线判定器.dc.html?v=20261018d",
- "./%E6%9C%8D%E5%8A%A1%E4%B8%AD%E5%BF%83%E5%88%A4%E5%AE%9A%E5%99%A8.dc.html": "服务中心判定器.dc.html?v=20261018d",
+ "./%E6%94%B9%E7%BA%BF%E5%88%A4%E5%AE%9A%E5%99%A8.dc.html": "改线判定器.dc.html?v=20261018e",
+ "./%E6%9C%8D%E5%8A%A1%E4%B8%AD%E5%BF%83%E5%88%A4%E5%AE%9A%E5%99%A8.dc.html": "服务中心判定器.dc.html?v=20261018e",
  "https://unpkg.com/react@18.3.1/umd/react.production.min.js": "assets/vendor/react.production.min.js",
  "https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js": "assets/vendor/react-dom.production.min.js"
 };</script>
@@ -53,9 +53,9 @@ window.addEventListener('error', function (e) {
   window.__csErrors.push(e.lineno ? file + ' 第 ' + e.lineno + ' 行：' + e.message : file + ' 没有加载成功');
 }, true);
 </script>
-<script src="content/首页.js?v=20261018d"></script>
-<script src="content/章节.js?v=20261018d"></script>
-<script src="content/汇率与工期.js?v=20261018d"></script>
+<script src="content/首页.js?v=20261018e"></script>
+<script src="content/章节.js?v=20261018e"></script>
+<script src="content/汇率与工期.js?v=20261018e"></script>
 <script>
 (function () {
   var need = { announcements: '首页', quicklinks: '首页', tasks: '首页', week: '首页',
@@ -1019,6 +1019,9 @@ input::placeholder{color:var(--ink-faint);}
           <sc-if value="{{ m.isBot }}" hint-placeholder-val="{{ true }}">
             <div class="msg" style="align-self:flex-start;max-width:92%;display:flex;flex-direction:column;gap:10px;padding:14px 16px;border-radius:16px 16px 16px 4px;background:var(--card);border:1px solid var(--line);">
               <span style="font-size:14.5px;line-height:1.75;white-space:pre-line;color:var(--ink);">{{ m.text }}</span>
+              <sc-if value="{{ m.hasAsk }}" hint-placeholder-val="{{ false }}">
+                <span style="display:flex;gap:8px;align-items:flex-start;padding:9px 12px;border-radius:12px;border:1px dashed var(--gold-lt);background:var(--paper);font-size:13.5px;line-height:1.65;color:var(--ink);"><span style="flex:0 0 auto;font-weight:700;color:var(--gold-deep);">想再确认</span><span>{{ m.askBack }}</span></span>
+              </sc-if>
               <sc-if value="{{ m.hasReply }}" hint-placeholder-val="{{ false }}">
                 <span style="display:flex;flex-direction:column;gap:4px;padding:10px 12px;border-radius:12px;background:var(--card-2);">
                   <span style="font-size:12px;font-weight:500;color:var(--gold-deep);">可以这样回复学员</span>
@@ -1061,7 +1064,7 @@ input::placeholder{color:var(--ink-faint);}
 
       <div style="display:flex;flex-direction:column;gap:8px;padding:12px 14px 14px;border-top:1px solid var(--line);background:var(--card);">
         <div style="display:flex;align-items:center;gap:8px;">
-          <input id="chat-input" value="{{ chatInput }}" sc-camel-on-change="{{ onChatInput }}" sc-camel-on-key-down="{{ onChatKey }}" aria-label="输入问题" maxlength="500" placeholder="问手册里的流程、费用、话术……" style="flex:1;min-width:0;min-height:44px;padding:0 14px;border:1px solid var(--line);border-radius:12px;background:var(--paper);font-family:var(--sans);font-size:15px;color:var(--ink);outline:none;">
+          <input id="chat-input" value="{{ chatInput }}" sc-camel-on-change="{{ onChatInput }}" sc-camel-on-key-down="{{ onChatKey }}" aria-label="输入问题" maxlength="500" placeholder="直接打字，或贴上学员的原话……" style="flex:1;min-width:0;min-height:44px;padding:0 14px;border:1px solid var(--line);border-radius:12px;background:var(--paper);font-family:var(--sans);font-size:15px;color:var(--ink);outline:none;">
           <button sc-camel-on-click="{{ sendChat }}" aria-label="发送" style="flex:0 0 auto;width:44px;height:44px;border:0;border-radius:12px;background:var(--gold-deep);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;">{{ sendIcon }}</button>
         </div>
         <span style="font-size:11.5px;color:var(--ink-faint);">回答整理自客服手册。涉及收费、制度的问题，以主管确认为准。</span>
@@ -1198,10 +1201,10 @@ class Component extends DCLogic {
   // ═══ 数易助手 ═══
   // 有后端（window.ASSISTANT_ENDPOINT）时由 Claude 根据手册回答；没有或连不上时用下面的关键词库
   KB = [
-    { k:['清零','邀约','安置','改线','业绩','RM600','申请表'], src:['rl-apply','rl-rule'],
+    { k:['清零','邀约','安置','改线','换线','upline','placement','业绩','RM600','申请表'], src:['rl-apply','rl-rule'],
       a:'改邀约人（包括改团队、归还原邀约人）：服务中心后台已不能申请，由学员本人填写《更换邀约人业务申请表》，用登记邮箱发到 csshuyi5796@gmail.com。\n每宗手续费 RM600，获批后学员本人缴付；业绩及级别一律清零，无法恢复。\n未满申请期限（只有上课记录满 6 个月／有工具记录满 1 年）的，要原邀约人同意并在申请表签名。\n只改安置人：清零，不论有没有业绩都要报价。\n例外：归还原邀约人未满半年，免费、不清零、无需同意。',
       reply:'您好，更换邀约人需要由您本人填写申请表并签名，再用您在公司登记的邮箱发送到 csshuyi5796@gmail.com。每宗手续费 RM600，获批后才缴付；更换后您本人的业绩及级别会清零，无法恢复。' },
-    { k:['工期','多久','名正言顺','戒指','手表','吊坠','手链','几天','交付','什么时候到'], src:['os-leadtime'],
+    { k:['工期','多久','名正言顺','戒指','手表','吊坠','手链','几天','交付','什么时候到','几时','拿到'], src:['os-leadtime'],
       a:'制作出货的工期按工具不同：\n名正言顺 30 个工作日；吊坠、手链 50；戒指 60；手表 50–60。\n另加排单确认和寄送时间。跟学员只说区间，不要承诺具体哪一天。',
       reply:'您好，名正言顺制作大约 30 个工作日，加上排单和寄送时间，我们会在出货后第一时间通知您。工作日不含周末和公假。' },
     { k:['改单','结算','改资料','更改','12点','12:00','修改'], src:['hq-order'],
@@ -1216,6 +1219,9 @@ class Component extends DCLogic {
     { k:['化解','维修','修理','坏了'], src:['hq-repair'],
       a:'化解流程：\n接收工具、开单签收 → 服务中心在系统新增化解单 → 等公司报价 → 缴款 → 开始化解。\n工期一律 50–60 个工作日，从缴款后开始算。完成后由服务中心通知学员领取，签收单交回客服。',
       reply:'您好，工具收到后公司会先报价，缴款后开始化解，工期大约 50–60 个工作日，完成后服务中心会通知您领取。' },
+    { k:['后台','登录','登不进','登入','密码','验证码','good39'], src:['lb-login','lb-faq'],
+      a:'学员后台是手机浏览器打开的 m.good39.com，用会员编号（例如 AD99999）加密码和四位验证码登录。\n验证码看不清：点图片换一组。密码不对：注意大小写，或在登录页点「找回密码？」用绑定的手机号或电邮重设；自己找不回再由客服帮忙重置。\n页面打不开：用手机浏览器最新版，清缓存再开。',
+      reply:'您好，请用手机浏览器打开 m.good39.com，输入会员编号、密码和验证码登录。如果密码不对，可以点「找回密码？」用绑定的手机号或电邮重设；还是不行的话告诉我，我帮您处理。' },
     { k:['牌子','现货','发货'], src:['lg-instock'],
       a:'现货牌子不再直接发货：要等有订单编号后，由客服通知服务中心才能发。\n急用的牌子，服务中心要提早下单，再告诉客服怎么发货。',
       reply:'您好，牌子需要先下单、有订单编号后才能安排发货，如果急用请尽早告诉我们，我们会优先处理。' }
@@ -1264,7 +1270,7 @@ class Component extends DCLogic {
         clearTimeout(timer);
         const data=await res.json().catch(()=>({}));
         if(res.ok && data && typeof data.answer==='string'){
-          msg={ role:'bot', text:data.answer, reply:typeof data.reply==='string'?data.reply:'', sources:Array.isArray(data.sources)?data.sources:[] };
+          msg={ role:'bot', text:data.answer, askBack:typeof data.askBack==='string'?data.askBack:'', reply:typeof data.reply==='string'?data.reply:'', sources:Array.isArray(data.sources)?data.sources:[] };
         } else if(data && data.error){
           msg=Object.assign(this.localAnswer(text),{ role:'bot', note:String(data.error).slice(0,80)+' 以下按关键词查到。' });
         }
@@ -1283,7 +1289,7 @@ class Component extends DCLogic {
   chatVals(S, flat){
     const endpoint=(typeof window!=='undefined' && window.ASSISTANT_ENDPOINT) || '';
     const byId={}; flat.forEach(x=>{ byId[x.s.id]=x.s; });
-    const welcome={ role:'bot', text:'你好，我是数易助手。\n问我流程、费用、工期或者话术，我会从客服手册里找答案，并告诉你出处。' };
+    const welcome={ role:'bot', text:'嗨，我是数易助手 👋\n学员或服务中心问了什么，直接打字或把原话贴给我就好，口语、简称都没关系。我会帮你查手册、告诉你怎么判断，再给你一段可以直接回学员的话。' };
     const list=[welcome, ...(S.chatMsgs||[])];
     const chatMsgs=list.map((m,i)=>{
       const sources=(m.sources||[]).filter(id=>byId[id]).slice(0,4).map(id=>({
@@ -1291,7 +1297,7 @@ class Component extends DCLogic {
         onGo:()=>{ this.go(id); if(S.isMobile) this.setState({ chatOpen:false }); } }));
       const canCopy=m.role==='bot' && i>0 && !!(m.reply||m.text);
       return { isUser:m.role==='user', isBot:m.role!=='user',
-        text:(m.note?m.note+'\n':'')+m.text, hasReply:!!m.reply, reply:m.reply||'',
+        text:(m.note?m.note+'\n':'')+m.text, hasReply:!!m.reply, reply:m.reply||'', hasAsk:!!m.askBack, askBack:m.askBack||'',
         sources, hasSources:sources.length>0, canCopy, hasFoot:sources.length>0||canCopy,
         copyLabel:S.chatCopied===i?'已复制':(m.reply?'复制回复学员':'复制'),
         onCopy:()=>{ this.copy('chat-'+i, m.reply||m.text); this.setState({ chatCopied:i }); if(this._cc) clearTimeout(this._cc); this._cc=setTimeout(()=>this.setState({ chatCopied:-1 }),1800); } };
@@ -1303,7 +1309,7 @@ class Component extends DCLogic {
       chatModeNote:endpoint?'根据客服手册回答，每条都附出处':'离线模式 · 按关键词查手册',
       chatMsgs, chatBusy:!!S.chatBusy,
       showSuggest:!(S.chatMsgs||[]).length && !S.chatBusy,
-      suggest:['改邀约人，业绩会清零吗？','名正言顺工期多久？','12 点结算后还能改单吗？','寄西马邮费多少？'].map(t=>({ t, ask:()=>this.askAssistant(t) })),
+      suggest:['学员想换 upline，要钱吗？业绩还在吗？','名正言顺几时可以拿到？','学员 12 点后才说要改资料，怎么办？','学员说后台登不进去','寄西马邮费多少？'].map(t=>({ t, ask:()=>this.askAssistant(t) })),
       chatInput:S.chatInput||'',
       onChatInput:(e)=>this.setState({ chatInput:e.target.value }),
       onChatKey:(e)=>{ if(e.key==='Enter' && !e.shiftKey && !e.isComposing && e.keyCode!==229){ if(e.preventDefault) e.preventDefault(); send(); } },
