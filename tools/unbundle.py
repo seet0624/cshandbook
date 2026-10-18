@@ -177,8 +177,11 @@ def main():
         resources, ensure_ascii=False, indent=1).replace("</", "<\\/")
     head = re.search(r"<head[^>]*>", template)
     template = template[:head.end()] + "\n" + resource_script + template[head.end():]
-    template = template.replace("<head>", "<head>\n<title>数易 · 客服业务门户</title>", 1) \
-        if "<title>" not in template else template
+    if "<title>" not in template:
+        template = template.replace("<head>", "<head>\n<title>数易 · 客服业务门户</title>", 1)
+    # 内部站点：GitHub Pages 发不了自定义响应头，只能用 meta 标签挡搜索引擎
+    if 'name="robots"' not in template:
+        template = template.replace("<head>", '<head>\n<meta name="robots" content="noindex, nofollow">', 1)
     (out / "index.html").write_text(template, encoding="utf-8")
 
     leftover = set(re.findall(UUID, template)) & set(manifest)

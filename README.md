@@ -1,6 +1,10 @@
 # 数易 · 客服业务门户
 
-客服内部业务手册：标准流程、话术库、布告栏速查、判定器工具。纯静态站点，部署在 Netlify，全站密码保护。
+客服内部业务手册：标准流程、话术库、布告栏速查、判定器工具。纯静态站点，通过 GitHub Pages 发布在
+<https://seet0624.github.io/cshandbook/>。
+
+> 站点是公开的：页面带 `noindex`，搜索引擎不会收录，但知道网址的人都能打开，仓库源码也公开。
+> 不要往这里放学员个人信息、账号密码等敏感内容。
 
 ## 目录结构
 
@@ -12,8 +16,8 @@
 | `assets/fonts.css`、`assets/fonts/` | 思源宋体、思源黑体、Cormorant Garamond，按字符分片按需加载 |
 | `assets/img/` | logo、国旗等图片 |
 | `assets/vendor/` | dc-runtime 与 React（本地托管，不依赖外部 CDN） |
-| `netlify.toml`、`netlify/edge-functions/basic-auth.ts` | Netlify 配置与全站访问密码 |
 | `tools/unbundle.py` | 把 Claude Design 导出的单文件打包页拆成上面的结构 |
+| `.nojekyll` | 让 GitHub Pages 原样发布文件，跳过 Jekyll 处理 |
 
 ## 本地预览
 
@@ -21,14 +25,6 @@
 python3 -m http.server 8000
 # 打开 http://localhost:8000
 ```
-
-本地预览不经过 Edge Function，不需要密码。
-
-## 访问密码
-
-在 Netlify 项目的 **Site configuration → Environment variables** 里设置 `SITE_PASSWORD`。
-访问时浏览器会弹出登录框：用户名随意填，密码填 `SITE_PASSWORD` 的值。
-没设置这个变量时，站点一律拒绝访问。
 
 ## 从 Claude Design 重新导出后更新
 
@@ -38,3 +34,4 @@ git diff --stat   # 确认改动
 ```
 
 脚本会覆盖 `index.html`、组件文件和 `assets/`。字体按内容哈希命名，内容没变的文件不会出现在 diff 里。
+推送到 `main` 后，GitHub Pages 几分钟内自动更新。
