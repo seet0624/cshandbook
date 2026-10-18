@@ -44,7 +44,8 @@ CS.tasks = [
   { t:'学员问价格', s:'统一报价口径', icon:'tag', go:'hq-order' },
   { t:'服务中心要充电子币', s:'充值流程', icon:'coins', go:'hq-topup' },
   { t:'要报单 / 分单', s:'分配规则', icon:'list-checks', go:'hq-split' },
-  { t:'不知道该说什么', s:'话术总库', icon:'message-square', go:'phrases' }
+  { t:'不知道该说什么', s:'话术总库', icon:'message-square', go:'phrases' },
+  { t:'学员问后台怎么用', s:'m.good39.com 教程', icon:'phone', go:'lb-login' }
 ];
 
 // 新手第一周 · 五课（按顺序显示；这里列出的章节在侧栏会标「必读」）
