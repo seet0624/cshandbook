@@ -7,17 +7,17 @@
 </head>
 <body>
 <x-dc>
-<div style="border:1px solid var(--line);background:var(--card);max-width:760px;">
+<div style="border-radius:10px;border:1px solid var(--line);background:var(--card);max-width:760px;">
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));border-bottom:1px solid var(--line);">
     <label style="display:block;padding:14px 18px;border-right:1px solid var(--line);">
       <span style="display:block;font-family:var(--serif);font-weight:700;font-size:12px;color:var(--gold-deep);letter-spacing:.08em;margin-bottom:6px;">币别</span>
-      <select value="{{ curCode }}" onChange="{{ onCur }}" style="width:100%;padding:8px 10px;font-size:14px;font-family:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:0;cursor:pointer;">
+      <select value="{{ curCode }}" onChange="{{ onCur }}" style="width:100%;padding:8px 10px;font-size:14px;font-family:inherit;color:var(--ink);background:var(--card);border-radius:10px;border:1px solid var(--line);border-radius:0;cursor:pointer;">
         <sc-for list="{{ curOpts }}" as="c" hint-placeholder-count="1"><option value="{{ c.c }}">{{ c.label }}</option></sc-for>
       </select>
     </label>
     <label style="display:block;padding:14px 18px;border-right:1px solid var(--line);">
       <span style="display:block;font-family:var(--serif);font-weight:700;font-size:12px;color:var(--gold-deep);letter-spacing:.08em;margin-bottom:6px;">加入工具</span>
-      <select value="" onChange="{{ onAdd }}" style="width:100%;padding:8px 10px;font-size:14px;font-family:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:0;cursor:pointer;">
+      <select value="" onChange="{{ onAdd }}" style="width:100%;padding:8px 10px;font-size:14px;font-family:inherit;color:var(--ink);background:var(--card);border-radius:10px;border:1px solid var(--line);border-radius:0;cursor:pointer;">
         <option value="">选择工具…</option>
         <sc-for list="{{ groups }}" as="g" hint-placeholder-count="1">
           <optgroup label="{{ g.label }}">
@@ -28,7 +28,7 @@
     </label>
     <label style="display:block;padding:14px 18px;">
       <span style="display:block;font-family:var(--serif);font-weight:700;font-size:12px;color:var(--gold-deep);letter-spacing:.08em;margin-bottom:6px;">或直接输入总额</span>
-      <input value="{{ manual }}" onChange="{{ onManual }}" inputMode="decimal" placeholder="如换购价" style="width:100%;box-sizing:border-box;padding:8px 10px;font-size:14px;font-family:var(--latin);color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:0;"></input>
+      <input value="{{ manual }}" onChange="{{ onManual }}" inputMode="decimal" placeholder="如换购价" style="width:100%;box-sizing:border-box;padding:8px 10px;font-size:14px;font-family:var(--latin);color:var(--ink);background:var(--card);border-radius:10px;border:1px solid var(--line);border-radius:0;"></input>
     </label>
   </div>
 
@@ -38,7 +38,7 @@
         <span style="font-size:14px;color:var(--ink);">按手动总额计算，已选工具不计入。</span>
         <span style="display:flex;align-items:center;gap:8px;margin-left:auto;">
           <span style="font-size:12px;color:var(--ink-faint);">补 PV 比例</span>
-          <span style="display:inline-flex;border:1px solid var(--ink);">
+          <span style="display:inline-flex;border-radius:10px;border:1px solid var(--ink);">
             <button onClick="{{ setM50 }}" style="{{ m50Style }}">50%</button>
             <button onClick="{{ setM30 }}" style="{{ m30Style }}">30%</button>
           </span>
@@ -56,7 +56,7 @@
             <span><span style="{{ r.rtStyle }}">{{ r.rt }}</span></span>
             <span style="text-align:right;font-family:var(--latin);font-size:15px;color:var(--ink);">{{ r.unit }}</span>
             <span style="display:flex;justify-content:center;">
-              <span style="display:inline-grid;grid-template-columns:30px 34px 30px;height:30px;border:1px solid var(--line);background:var(--card);">
+              <span style="display:inline-grid;grid-template-columns:30px 34px 30px;height:30px;border-radius:10px;border:1px solid var(--line);background:var(--card);">
                 <button onClick="{{ r.dec }}" aria-label="减少" style="border:0;background:transparent;color:var(--ink);cursor:pointer;font-size:15px;font-family:inherit;" style-hover="background:var(--card-2);">−</button>
                 <span style="display:flex;align-items:center;justify-content:center;border-left:1px solid var(--line);border-right:1px solid var(--line);font-family:var(--latin);font-weight:700;font-size:14px;color:var(--ink);">{{ r.qty }}</span>
                 <button onClick="{{ r.inc }}" aria-label="增加" style="border:0;background:transparent;color:var(--ink);cursor:pointer;font-size:15px;font-family:inherit;" style-hover="background:var(--card-2);">+</button>
@@ -79,7 +79,7 @@
     </div>
   </div>
 
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr));border-bottom:2px solid var(--ink);">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr));border-bottom:1px solid var(--line);">
     <sc-for list="{{ tierCards }}" as="t" hint-placeholder-count="3">
       <div style="{{ t.style }}">
         <div style="display:flex;justify-content:space-between;gap:8px;"><span style="{{ t.kStyle }}">{{ t.range }}</span><span style="{{ t.kStyle }}">{{ t.mark }}</span></div>
@@ -95,7 +95,7 @@
       <span style="font-size:11.5px;color:var(--ink-faint);">{{ rateNote }}</span>
     </div>
     <sc-if value="{{ hasTier }}" hint-placeholder-val="{{ true }}">
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,120px),1fr));gap:1px;background:var(--line);border:1px solid var(--line);">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,120px),1fr));gap:1px;background:var(--line);border-radius:10px;border:1px solid var(--line);">
         <div style="background:var(--card);padding:12px 14px;"><div style="font-size:11.5px;color:var(--ink-faint);margin-bottom:4px;">工具总额</div><div style="font-family:var(--latin);font-weight:700;font-size:18px;color:var(--ink);">{{ fTotal }}</div></div>
         <div style="background:var(--card);padding:12px 14px;"><div style="font-size:11.5px;color:var(--ink-faint);margin-bottom:4px;">− 服务中心</div><div style="font-family:var(--latin);font-weight:700;font-size:18px;color:var(--ink);">{{ tierPrice }}</div></div>
         <div style="background:var(--card);padding:12px 14px;"><div style="font-size:11.5px;color:var(--ink-faint);margin-bottom:4px;">＝ 差额</div><div style="font-family:var(--latin);font-weight:700;font-size:18px;color:var(--ink);">{{ fDiff }}</div></div>
@@ -103,7 +103,7 @@
           <div style="background:var(--card);padding:12px 14px;"><div style="font-size:11.5px;color:var(--ink-faint);margin-bottom:4px;">÷ {{ fRate }}（固定汇率）→ 美金</div><div style="font-family:var(--latin);font-weight:700;font-size:18px;color:var(--ink);">{{ fUsd }}</div></div>
         </sc-if>
       </div>
-      <div style="margin-top:12px;border:1px solid var(--line);background:var(--card);">
+      <div style="margin-top:12px;border-radius:10px;border:1px solid var(--line);background:var(--card);">
         <sc-for list="{{ groups2 }}" as="g" hint-placeholder-count="1">
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,130px),1fr));gap:4px 14px;align-items:baseline;padding:12px 14px;border-bottom:1px solid var(--line);">
             <div>
@@ -114,14 +114,14 @@
             <div style="font-size:12px;color:var(--ink-faint);">{{ g.op }} ＝ <b style="font-family:var(--latin);font-size:18px;color:var(--ink);">{{ g.pv }}</b> PV</div>
           </div>
         </sc-for>
-        <div style="background:var(--ink);padding:14px;display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;">
+        <div style="background:var(--ink);border-radius:var(--r,14px);padding:14px;display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;">
           <span style="font-size:12px;color:var(--gold-lt);letter-spacing:.06em;">合计补 PV（美金）</span>
           <span style="font-family:var(--latin);font-weight:700;font-size:28px;color:#fff;">{{ fPv }}</span>
         </div>
       </div>
     </sc-if>
     <sc-if value="{{ noTier }}" hint-placeholder-val="{{ false }}">
-      <div style="background:var(--card);border:1px solid var(--line);padding:14px 16px;font-size:15px;line-height:1.7;color:var(--ink);">{{ vNoTier }}</div>
+      <div style="background:var(--card);border-radius:10px;border:1px solid var(--line);padding:14px 16px;font-size:15px;line-height:1.7;color:var(--ink);">{{ vNoTier }}</div>
     </sc-if>
 
     <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;">
@@ -168,7 +168,7 @@ class Component extends DCLogic {
       .map(x=>({ v:String(x.i), label:x.t.n+'　'+code+' '+this.fmt(x.t.p[ci]) })) })).filter(g=>g.opts.length);
 
     const selRows=[]; let sum=0; const lines=[]; let items=[];
-    const rtStyle=r=>'display:inline-block;padding:3px 8px;font-size:12px;font-weight:700;letter-spacing:.04em;white-space:nowrap;'+(r===0.3?'background:var(--gold-deep);color:#fff;border:1px solid var(--gold-deep);':'background:transparent;color:var(--ink);border:1px solid var(--ink);');
+    const rtStyle=r=>'display:inline-block;padding:3px 8px;font-size:12px;font-weight:700;letter-spacing:.04em;white-space:nowrap;'+(r===0.3?'background:var(--gold-deep);color:#fff;border-radius:10px;border:1px solid var(--gold-deep);':'background:transparent;color:var(--ink);border-radius:10px;border:1px solid var(--ink);');
     Object.keys(S.sel).forEach(k=>{
       const i=+k, t=D.tools[i], q=S.sel[k], p=t.p[ci]||0, ratio=this.ratioOf(t); sum+=p*q;
       selRows.push({ n:t.n, qty:q, amt:this.fmt(p*q), amtCur:this.fmt(p*q)+unit, unit:this.fmt(p), rt:(ratio*100)+'% 规则', rtStyle:rtStyle(ratio),
@@ -242,7 +242,7 @@ class Component extends DCLogic {
       setM50:()=>this.setState({mRatio:0.5}), setM30:()=>this.setState({mRatio:0.3}),
       m50Style:this.segBtn(S.mRatio===0.5), m30Style:this.segBtn(S.mRatio===0.3),
       onCopy:()=>this.copy(copyText), copyLabel:S.copied?'已复制':'复制算式',
-      copyStyle:'padding:9px 16px;font-size:13px;font-family:inherit;cursor:pointer;border:1px solid var(--ink);background:'+(S.copied?'var(--ink)':'var(--card)')+';color:'+(S.copied?'#fff':'var(--ink)')+';'
+      copyStyle:'padding:9px 16px;font-size:13px;font-family:inherit;cursor:pointer;border-radius:10px;border:1px solid var(--ink);background:'+(S.copied?'var(--ink)':'var(--card)')+';color:'+(S.copied?'#fff':'var(--ink)')+';'
     };
   }
 }

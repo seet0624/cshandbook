@@ -1,0 +1,7 @@
+# 只用于「数易助手」后端（Netlify Functions）。客服门户本身仍在 GitHub Pages。
+[build]
+  command = "node tools/build_handbook.mjs"
+  publish = "netlify/public"
+
+[functions]
+  node_bundler = "esbuild"

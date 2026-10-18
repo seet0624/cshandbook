@@ -41,8 +41,28 @@
 | `改线判定器.dc.html`、`服务中心判定器.dc.html` | 两个判定器组件 |
 | `assets/` | 字体（按字符分片按需加载）、图片、dc-runtime 与 React（本地托管，不依赖外部 CDN） |
 | `tools/check_content.mjs` | 内容检查脚本，GitHub Actions 每次改动自动运行 |
+| `netlify/`、`netlify.toml`、`package.json` | 数易助手的 AI 后端（Netlify Functions），见下 |
+| `tools/build_handbook.mjs` | 把 `content/` 整理成纯文字给 AI 助手当资料，Netlify 部署时自动运行 |
 | `tools/unbundle.py` | 把 Claude Design 导出的单文件打包页拆成静态文件（只用于首次迁移，见下） |
 | `.nojekyll` | 让 GitHub Pages 原样发布文件，跳过 Jekyll 处理 |
+
+## 数易助手（AI 问答）
+
+右下角的「问数易助手」按钮，以及首页的「开始提问」，会打开助手面板。
+
+- **后端**：`netlify/functions/ask/ask.mjs`，部署在 Netlify，接口是 `/api/ask`。它调用 Claude API，只根据客服手册回答，每条回答附章节出处，适合时附一段可直接发给学员的回复。
+- **手册资料自动同步**：Netlify 每次部署都会从 `content/` 重新整理手册（`tools/build_handbook.mjs`）。Netlify 连接了这个 GitHub 仓库时，改完内容会自动重新部署，助手也跟着更新。
+- **离线模式**：`index.html` 里的 `window.ASSISTANT_ENDPOINT` 留空，或者后端连不上时，助手改用内置的关键词库，并按全站搜索推荐相关章节。
+- **Netlify 环境变量**（Site configuration → Environment variables，作用范围要包含 Functions）：
+
+  | 变量 | 说明 |
+  |---|---|
+  | `ANTHROPIC_API_KEY` | 必填。Claude API Key，在 console.anthropic.com 申请；只放这里，不要写进代码或发在聊天里 |
+  | `ASSISTANT_MODEL` | 可选，默认 `claude-opus-5-5`。想省钱可改成 `claude-sonnet-5-5` 或 `claude-haiku-5-5` |
+  | `ASSISTANT_EFFORT` | 可选，默认 `low`（回答快）。可改成 `medium` |
+  | `ALLOWED_ORIGINS` | 可选，默认 `https://seet0624.github.io`，只有这个网站能调用接口 |
+
+- **防滥用**：每个 IP 每分钟最多 10 次、问题最长 500 字。接口地址是公开的，建议在 Anthropic Console 设置每月用量上限。
 
 ## 本地预览与检查
 

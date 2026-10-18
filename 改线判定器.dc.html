@@ -7,7 +7,7 @@
 </head>
 <body>
 <x-dc>
-<div style="border:1px solid var(--line);background:var(--card);display:grid;grid-template-columns:minmax(240px,300px) 1fr;gap:0">
+<div style="border-radius:10px;border:1px solid var(--line);background:var(--card);display:grid;grid-template-columns:minmax(240px,300px) 1fr;gap:0">
   <div style="padding:22px 20px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:18px">
     <div>
       <div style="font-family:var(--serif);font-weight:700;font-size:13px;color:var(--gold-deep);letter-spacing:.08em;margin-bottom:9px">1 · 操作范围</div>
@@ -49,24 +49,24 @@
       <span style="font-family:var(--latin);font-weight:700;font-size:13px;color:#fff;background:var(--gold-deep);padding:3px 10px;white-space:nowrap">情形 {{ vCase }}</span>
     </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin:18px 0">
-      <div style="background:var(--card);border:1px solid var(--line);border-top:2px solid var(--gold);padding:14px 16px">
+      <div style="background:var(--card);border-radius:10px;border:1px solid var(--line);padding:14px 16px">
         <div style="font-family:var(--serif);font-size:12px;color:var(--gold-deep);letter-spacing:.08em;margin-bottom:5px">业绩清零</div>
         <div style="font-family:var(--serif);font-weight:700;font-size:20px;color:var(--ink)">{{ vReset }}</div>
       </div>
-      <div style="background:var(--card);border:1px solid var(--line);border-top:2px solid var(--gold);padding:14px 16px">
+      <div style="background:var(--card);border-radius:10px;border:1px solid var(--line);padding:14px 16px">
         <div style="font-family:var(--serif);font-size:12px;color:var(--gold-deep);letter-spacing:.08em;margin-bottom:5px">是否报价</div>
         <div style="font-family:var(--serif);font-weight:700;font-size:20px;color:var(--ink)">{{ vQuote }}</div>
       </div>
-      <div style="background:var(--card);border:1px solid var(--line);border-top:2px solid var(--gold);padding:14px 16px">
+      <div style="background:var(--card);border-radius:10px;border:1px solid var(--line);padding:14px 16px">
         <div style="font-family:var(--serif);font-size:12px;color:var(--gold-deep);letter-spacing:.08em;margin-bottom:5px">资格要求</div>
         <div style="font-size:13px;line-height:1.6;color:var(--ink)">{{ vQual }}</div>
       </div>
     </div>
-    <div style="background:var(--card);border:1px solid var(--line);border-left:3px solid var(--gold);padding:14px 18px;margin-bottom:14px">
+    <div style="background:var(--card);border-radius:10px;border:1px solid var(--line);border-left:3px solid var(--gold);padding:14px 18px;margin-bottom:14px">
       <div style="font-family:var(--serif);font-size:12px;color:var(--gold-deep);letter-spacing:.08em;margin-bottom:5px">需谁同意</div>
       <div style="font-size:14px;line-height:1.75;color:var(--ink);white-space:pre-line">{{ vAgree }}</div>
     </div>
-    <div style="background:var(--ink);color:#fff;padding:16px 18px">
+    <div style="background:var(--ink);border-radius:var(--r,14px);color:#fff;padding:16px 18px">
       <div style="font-family:var(--serif);font-size:12px;color:var(--gold-lt);letter-spacing:.08em;margin-bottom:7px">必须附上</div>
       <div style="font-size:14px;line-height:1.85;white-space:pre-line">{{ vExtra }}</div>
     </div>
@@ -86,9 +86,9 @@ class Component extends DCLogic {
   }
 
   btn(on, dis) {
-    const base = 'text-align:left;padding:10px 13px;font-size:13.5px;font-family:inherit;cursor:pointer;border:1px solid var(--line);line-height:1.4;transition:background .15s,border-color .15s;';
+    const base = 'text-align:left;padding:10px 13px;font-size:13.5px;font-family:inherit;cursor:pointer;border-radius:10px;border:1px solid var(--line);line-height:1.4;transition:background .15s,border-color .15s;';
     if (dis) return base + 'background:var(--card);color:var(--ink-faint);opacity:.45;pointer-events:none;';
-    if (on) return base + 'background:var(--ink);border-color:var(--ink);color:#fff;';
+    if (on) return base + 'background:var(--ink);border-radius:var(--r,14px);border-color:var(--ink);color:#fff;';
     return base + 'background:var(--card);color:var(--ink);';
   }
 

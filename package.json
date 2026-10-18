@@ -1,0 +1,13 @@
+{
+  "name": "cshandbook",
+  "private": true,
+  "type": "module",
+  "description": "数易客服业务门户：静态网站在 GitHub Pages，数易助手后端在 Netlify",
+  "scripts": {
+    "check": "node tools/check_content.mjs",
+    "build:handbook": "node tools/build_handbook.mjs"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.133.0"
+  }
+}
