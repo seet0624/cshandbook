@@ -35,8 +35,8 @@
  "flag_il": "assets/img/flags/il.png",
  "flag_ch": "assets/img/flags/ch.png",
  "flag_sa": "assets/img/flags/sa.png",
- "./%E6%94%B9%E7%BA%BF%E5%88%A4%E5%AE%9A%E5%99%A8.dc.html": "改线判定器.dc.html?v=20261018e",
- "./%E6%9C%8D%E5%8A%A1%E4%B8%AD%E5%BF%83%E5%88%A4%E5%AE%9A%E5%99%A8.dc.html": "服务中心判定器.dc.html?v=20261018e",
+ "./%E6%94%B9%E7%BA%BF%E5%88%A4%E5%AE%9A%E5%99%A8.dc.html": "改线判定器.dc.html?v=20261018f",
+ "./%E6%9C%8D%E5%8A%A1%E4%B8%AD%E5%BF%83%E5%88%A4%E5%AE%9A%E5%99%A8.dc.html": "服务中心判定器.dc.html?v=20261018f",
  "https://unpkg.com/react@18.3.1/umd/react.production.min.js": "assets/vendor/react.production.min.js",
  "https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js": "assets/vendor/react-dom.production.min.js"
 };</script>
@@ -53,9 +53,9 @@ window.addEventListener('error', function (e) {
   window.__csErrors.push(e.lineno ? file + ' 第 ' + e.lineno + ' 行：' + e.message : file + ' 没有加载成功');
 }, true);
 </script>
-<script src="content/首页.js?v=20261018e"></script>
-<script src="content/章节.js?v=20261018e"></script>
-<script src="content/汇率与工期.js?v=20261018e"></script>
+<script src="content/首页.js?v=20261018f"></script>
+<script src="content/章节.js?v=20261018f"></script>
+<script src="content/汇率与工期.js?v=20261018f"></script>
 <script>
 (function () {
   var need = { announcements: '首页', quicklinks: '首页', tasks: '首页', week: '首页',
@@ -136,6 +136,19 @@ input::placeholder{color:var(--ink-faint);}
 @keyframes dot{0%,80%,100%{opacity:.25;transform:translateY(0);}40%{opacity:1;transform:translateY(-3px);}}
 .chip{transition:background-color .18s ease,border-color .18s ease;}
 .chip:hover{background:var(--card-2) !important;border-color:var(--gold-lt) !important;}
+/* 学员后台：步骤 + 手机画面 */
+.lb-screen{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:28px;align-items:start;padding:22px;border-radius:18px;border:1px solid var(--line);background:linear-gradient(135deg,var(--card) 55%,var(--card-2));}
+.lb-phones{display:flex;gap:16px;align-items:flex-start;}
+.lb-phone{margin:0;width:200px;display:flex;flex-direction:column;gap:8px;}
+.lb-frame{padding:7px;border-radius:30px;background:#1c1917;box-shadow:0 18px 40px rgba(28,25,23,.18),inset 0 0 0 1px rgba(201,154,59,.45);}
+.lb-frame a{border-radius:24px;overflow:hidden;background:#fff;aspect-ratio:9/16;}
+.lb-frame img{width:100%;height:auto;}
+@media (max-width:1100px){ .lb-phone{width:170px;} }
+@media (max-width:760px){
+  .lb-screen{grid-template-columns:1fr;padding:18px;}
+  .lb-phones{justify-content:center;}
+  .lb-phone{width:min(46%,200px);}
+}
 /* 改线判定器：流程卡与办理流程图 */
 .rj-flow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;}
 .rj-arrow{position:absolute;right:-19px;top:22px;z-index:2;width:28px;height:28px;border-radius:50%;background:var(--gold);color:#1c1917;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 4px var(--paper);}
@@ -654,6 +667,37 @@ input::placeholder{color:var(--ink-faint);}
                         </div>
                       </div>
                     </sc-for>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ b.isScreen }}" hint-placeholder-val="{{ false }}">
+                  <sc-if value="{{ b.hasTitle }}" hint-placeholder-val="{{ false }}"><h3 style="font-family:var(--serif);font-weight:700;font-size:18px;color:var(--ink);margin:0 0 16px;display:flex;align-items:center;gap:12px;"><span style="width:4px;height:18px;border-radius:2px;background:var(--gold);"></span>{{ b.title }}</h3></sc-if>
+                  <div class="lb-screen">
+                    <div style="display:flex;flex-direction:column;gap:14px;min-width:0;">
+                      <ol style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;">
+                        <sc-for list="{{ b.steps }}" as="st" hint-placeholder-count="4">
+                          <li style="position:relative;display:flex;gap:14px;padding-bottom:18px;">
+                            <sc-if value="{{ st.hasLine }}" hint-placeholder-val="{{ true }}"><span style="position:absolute;left:16px;top:36px;bottom:2px;width:2px;background:linear-gradient(var(--gold-lt),var(--line));"></span></sc-if>
+                            <span style="{{ st.numStyle }}">{{ st.n }}</span>
+                            <span style="display:flex;flex-direction:column;gap:4px;padding-top:5px;min-width:0;">
+                              <span style="font-weight:600;font-size:15px;line-height:1.45;color:var(--ink);">{{ st.t }}</span>
+                              <span style="font-size:13.5px;line-height:1.7;color:var(--ink-soft);">{{ st.d }}</span>
+                            </span>
+                          </li>
+                        </sc-for>
+                      </ol>
+                      <sc-for list="{{ b.tips }}" as="tp" hint-placeholder-count="1">
+                        <div style="{{ tp.style }}"><span style="{{ tp.badgeStyle }}">{{ tp.label }}</span><span style="font-size:13.5px;line-height:1.7;color:var(--ink);">{{ tp.t }}</span></div>
+                      </sc-for>
+                    </div>
+                    <div class="lb-phones">
+                      <sc-for list="{{ b.shots }}" as="sh" hint-placeholder-count="2">
+                        <figure class="lb-phone">
+                          <div class="lb-frame">{{ sh.el }}</div>
+                          <figcaption style="font-size:12.5px;color:var(--ink-faint);text-align:center;">{{ sh.cap }}</figcaption>
+                        </figure>
+                      </sc-for>
+                    </div>
                   </div>
                 </sc-if>
 
@@ -1387,6 +1431,7 @@ class Component extends DCLogic {
       if(b.items && b.k==='roles') b.items.forEach(x=>{ t+=' '+x.t+' '+x.d; });
       if(b.items && b.k==='team') b.items.forEach(x=>{ t+=' '+x.name+' '+x.duties.join(' '); });
       if(b.paras) t+=' '+b.paras.join(' ');
+      if(b.tips) b.tips.forEach(x=>{ t+=' '+x.t; });
       if(b.d) t+=' '+b.d;
       if(b.groups) b.groups.forEach(g=>{ t+=' '+g.t; g.items.forEach(qa=>{ t+=' '+qa.q+' '+qa.a; }); });
       if(b.rows) b.rows.forEach(r=>{
@@ -1437,7 +1482,7 @@ class Component extends DCLogic {
   }
 
   mapBlock(sec, b, bi, enableCopy){
-    const base={ isFlow:false,isNote:false,isList:false,isMeta:false,isText:false,isQA:false,isPrice:false,isRoles:false,isTeam:false,isMatrix:false,isImage:false,isFx:false,
+    const base={ isFlow:false,isNote:false,isList:false,isMeta:false,isText:false,isQA:false,isPrice:false,isRoles:false,isTeam:false,isMatrix:false,isImage:false,isScreen:false,isFx:false,
       isTimeline:false,isBranch:false,isLane:false,isApproval:false,isDuration:false,isCheck:false,isFormula:false,isStages:false,
       hasTitle:!!b.title, title:b.title||'' };
     const narrow = this.state.isMobile;
@@ -1522,6 +1567,20 @@ class Component extends DCLogic {
           hasCost:!!s.cost,
           style:'padding:20px;box-shadow:0 0 0 1px var(--rule);background:'+(s.warn?'var(--card-2)':'var(--card)')+';',
           costStyle:'margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-family:var(--latin);font-weight:700;font-size:16px;color:'+(s.warn?'#b91c1c':'var(--gold-deep)')+';' })) });
+    }
+    if(b.k==='screen'){
+      const steps=b.steps||[];
+      const TIP={ tip:['提示','var(--gold-deep)','var(--card-2)','var(--gold-lt)'], warn:['注意','var(--bad)','var(--bad-bg)','#fecaca'], staff:['客服注意','#fafaf9','var(--ink)','var(--ink)'] };
+      return Object.assign(base,{ isScreen:true,
+        steps:steps.map((x,i)=>({ n:String(i+1), t:x.t, d:x.d||'', hasLine:i<steps.length-1,
+          numStyle:'position:relative;z-index:1;flex:0 0 auto;width:34px;height:34px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-family:var(--latin);font-weight:700;font-size:17px;'
+            +(i===steps.length-1?'background:var(--gold);color:#1c1917;box-shadow:0 0 0 5px rgba(201,154,59,.18);':'background:var(--card);color:var(--ink);border:1.5px solid var(--gold-lt);') })),
+        tips:(b.tips||[]).map(x=>{ const c=TIP[x.k]||TIP.tip; return { t:x.t, label:c[0],
+          style:'display:flex;gap:10px;align-items:flex-start;padding:11px 14px;border-radius:12px;background:'+(x.k==='staff'?'var(--paper-2)':c[2])+';border:1px solid '+(x.k==='staff'?'var(--line)':c[3])+';',
+          badgeStyle:'flex:0 0 auto;padding:1px 9px;border-radius:999px;font-size:12px;font-weight:700;line-height:1.7;white-space:nowrap;color:'+(x.k==='staff'?'#fafaf9':c[1])+';background:'+(x.k==='staff'?'var(--ink)':'var(--card)')+';' }; }),
+        shots:(b.shots||[]).map(x=>({ cap:x.cap||'',
+          el:React.createElement('a',{ href:x.src, target:'_blank', rel:'noopener', title:'点开看大图', style:{display:'block'} },
+            React.createElement('img',{ src:x.src, alt:x.alt||x.cap||'', loading:'lazy', style:{display:'block',width:'100%',height:'auto'} })) })) });
     }
     if(b.k==='image') return Object.assign(base,{ isImage:true, cap:b.cap||'',
       el: React.createElement('img',{ src:this.res(b.res||'screws', b.src), alt:b.alt||b.title||'', style:{display:'block',width:'100%',height:'auto',border:'1px solid var(--line-soft)'} }) });

@@ -60,6 +60,10 @@ function blockText(b, CS) {
       out.push('| ' + list(b.head).join(' | ') + ' |');
       list(b.rows).forEach((r) => out.push(r.g ? `【${r.g}】` : '| ' + list(r.c).map((v) => String(v).replace(/\n/g, '；')).join(' | ') + ' |'));
       break;
+    case 'screen':
+      list(b.steps).forEach((x, i) => out.push(`${i + 1}. ${x.t}${x.d ? '：' + x.d : ''}`));
+      list(b.tips).forEach((x) => out.push(`【${{ tip: '提示', warn: '注意', staff: '客服注意' }[x.k] || '提示'}】${x.t}`));
+      break;
     case 'image':
       if (b.cap) out.push(`（图）${b.cap}`);
       break;
