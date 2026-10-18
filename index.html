@@ -133,6 +133,19 @@ input::placeholder{color:var(--ink-faint);}
 @keyframes dot{0%,80%,100%{opacity:.25;transform:translateY(0);}40%{opacity:1;transform:translateY(-3px);}}
 .chip{transition:background-color .18s ease,border-color .18s ease;}
 .chip:hover{background:var(--card-2) !important;border-color:var(--gold-lt) !important;}
+/* 改线判定器：流程卡与办理流程图 */
+.rj-flow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;}
+.rj-arrow{position:absolute;right:-19px;top:22px;z-index:2;width:28px;height:28px;border-radius:50%;background:var(--gold);color:#1c1917;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 4px var(--paper);}
+.rj-steps{list-style:none;margin:0;padding:0;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:10px;}
+.rj-step{position:relative;display:flex;flex-direction:column;gap:10px;min-width:0;}
+.rj-line{position:absolute;top:16px;left:34px;right:-10px;height:2px;background:linear-gradient(90deg,var(--gold-lt),var(--rule));}
+@media (max-width:900px){
+  .rj-flow{grid-template-columns:1fr;gap:12px;}
+  .rj-arrow{right:auto;top:auto;left:50%;bottom:-20px;transform:translateX(-50%) rotate(90deg);}
+  .rj-steps{grid-auto-flow:row;grid-auto-columns:auto;gap:14px;}
+  .rj-step{flex-direction:row;align-items:flex-start;gap:12px;}
+  .rj-line{top:34px;bottom:-14px;left:16px;right:auto;width:2px;height:auto;background:var(--rule);}
+}
 @media (max-width:1000px){
   .bento{grid-template-columns:1fr !important;}
   .bento > *{grid-column:auto !important;grid-row:auto !important;}
@@ -491,8 +504,8 @@ input::placeholder{color:var(--ink-faint);}
 
             <sc-if value="{{ cur.showJudge }}" hint-placeholder-val="{{ false }}">
               <div style="margin-top:30px;">
-                <h3 style="font-family:var(--serif);font-weight:700;font-size:18px;color:var(--ink);margin:0 0 14px;display:flex;align-items:center;gap:12px;"><span style="width:4px;height:18px;border-radius:2px;background:var(--gold);"></span>判定器 · 选三下出结果</h3>
-                <dc-import name="改线判定器" hint-size="100%,520px"></dc-import>
+                <h3 style="font-family:var(--serif);font-weight:700;font-size:18px;color:var(--ink);margin:0 0 14px;display:flex;align-items:center;gap:12px;"><span style="width:4px;height:18px;border-radius:2px;background:var(--gold);"></span>改线判定器 · 选三步出结果</h3>
+                <dc-import name="改线判定器" hint-size="100%,1400px"></dc-import>
               </div>
             </sc-if>
 

@@ -7,150 +7,370 @@
 </head>
 <body>
 <x-dc>
-<div style="border-radius:10px;border:1px solid var(--line);background:var(--card);display:grid;grid-template-columns:minmax(240px,300px) 1fr;gap:0">
-  <div style="padding:22px 20px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:18px">
-    <div>
-      <div style="font-family:var(--serif);font-weight:700;font-size:13px;color:var(--gold-deep);letter-spacing:.08em;margin-bottom:9px">1 · 操作范围</div>
-      <div style="display:flex;flex-direction:column;gap:6px">
-        <button onClick="{{ setNew }}" style="{{ bNew }}">改去新团队（改团队申请）</button>
-        <button onClick="{{ setIn }}" style="{{ bIn }}">团队内部调整</button>
-        <button onClick="{{ setAcct }}" style="{{ bAcct }}">自己户口 1 ↔ 户口 2</button>
-      </div>
-    </div>
-    <div>
-      <div style="font-family:var(--serif);font-weight:700;font-size:13px;color:var(--gold-deep);letter-spacing:.08em;margin-bottom:9px">2 · 改什么</div>
-      <div style="display:flex;flex-direction:column;gap:6px">
-        <button onClick="{{ setInv }}" style="{{ bInv }}">仅改邀约人</button>
-        <button onClick="{{ setBoth }}" style="{{ bBoth }}">邀约人 ＋ 安置人</button>
-        <button onClick="{{ setPlace }}" style="{{ bPlace }}">只改安置人</button>
-        <button onClick="{{ setRet }}" style="{{ bRet }}">归还原邀约人</button>
-      </div>
-      <p style="margin:8px 0 0;font-size:11.5px;line-height:1.6;color:var(--ink-faint)">{{ naNote }}</p>
-    </div>
-    <div>
-      <div style="font-family:var(--serif);font-weight:700;font-size:13px;color:var(--gold-deep);letter-spacing:.08em;margin-bottom:9px">3 · 归还多久（仅归还原邀约人）</div>
-      <div style="display:flex;gap:6px">
-        <button onClick="{{ setRetL }}" style="{{ bRetL }}">未满半年</button>
-        <button onClick="{{ setRetG }}" style="{{ bRetG }}">超过半年</button>
-      </div>
-    </div>
-    <div>
-      <div style="font-family:var(--serif);font-weight:700;font-size:13px;color:var(--gold-deep);letter-spacing:.08em;margin-bottom:9px">4 · 满申请期限了吗（改邀约人）</div>
-      <div style="display:flex;gap:6px">
-        <button onClick="{{ setDueOk }}" style="{{ bDueOk }}">已满</button>
-        <button onClick="{{ setDueEarly }}" style="{{ bDueEarly }}">未满</button>
-      </div>
-      <p style="margin:8px 0 0;font-size:11.5px;line-height:1.6;color:var(--ink-faint)">只有上课记录：最近一次上课满 6 个月；有工具购买：最近一次上课或工具记录满 1 年。
-      </div>
-    </div>
+<div style="display:flex;flex-direction:column;gap:16px;">
+
+  <div class="rj-flow">
+    <sc-for list="{{ questions }}" as="q" hint-placeholder-count="3">
+      <section style="{{ q.cardStyle }}">
+        <sc-if value="{{ q.hasArrow }}" hint-placeholder-val="{{ true }}">
+          <span class="rj-arrow" aria-hidden="true">{{ arrowEl }}</span>
+        </sc-if>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="{{ q.numStyle }}">{{ q.n }}</span>
+          <span style="display:flex;flex-direction:column;min-width:0;">
+            <span style="font-family:var(--serif);font-weight:700;font-size:15px;color:var(--ink);">{{ q.title }}</span>
+            <span style="font-size:12px;color:var(--ink-faint);">{{ q.sub }}</span>
+          </span>
+        </div>
+        <sc-for list="{{ q.groups }}" as="g" hint-placeholder-count="1">
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <sc-if value="{{ g.hasLabel }}" hint-placeholder-val="{{ false }}">
+              <span style="font-size:12px;font-weight:500;color:var(--gold-deep);">{{ g.label }}</span>
+            </sc-if>
+            <div style="{{ g.wrapStyle }}">
+              <sc-for list="{{ g.opts }}" as="o" hint-placeholder-count="3">
+                <button onClick="{{ o.onPick }}" aria-pressed="{{ o.pressed }}" style="{{ o.style }}"><span style="{{ o.dotStyle }}">{{ o.check }}</span><span>{{ o.label }}</span></button>
+              </sc-for>
+            </div>
+            <sc-if value="{{ g.hasHint }}" hint-placeholder-val="{{ false }}">
+              <span style="font-size:11.5px;line-height:1.6;color:var(--ink-faint);">{{ g.hint }}</span>
+            </sc-if>
+          </div>
+        </sc-for>
+        <sc-if value="{{ q.isIdle }}" hint-placeholder-val="{{ false }}">
+          <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:14px;border:1px dashed var(--rule);border-radius:12px;font-size:12.5px;color:var(--ink-faint);text-align:center;">{{ q.idleText }}</div>
+        </sc-if>
+      </section>
+    </sc-for>
   </div>
 
-  <div style="padding:24px;background:linear-gradient(160deg,var(--card-2),var(--card))">
-    <div style="display:flex;justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap;padding-bottom:12px;border-bottom:2px solid var(--gold)">
-      <h4 style="margin:0;font-family:var(--serif);font-weight:900;font-size:21px;color:var(--ink);line-height:1.3">{{ vTitle }}</h4>
-      <span style="font-family:var(--latin);font-weight:700;font-size:13px;color:#fff;background:var(--gold-deep);padding:3px 10px;white-space:nowrap">情形 {{ vCase }}</span>
+  <section class="msg" style="border-radius:18px;border:1px solid var(--line);background:linear-gradient(135deg,var(--card-2) 0%,var(--card) 55%);padding:22px 22px 20px;display:flex;flex-direction:column;gap:18px;">
+    <div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:14px;">
+      <span style="flex:0 0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;width:74px;height:74px;border-radius:18px;background:var(--ink);color:#fff;box-shadow:inset 0 0 0 1px rgba(201,154,59,.5);">
+        <span style="font-size:10.5px;letter-spacing:.14em;color:#d6d3d1;">情形</span>
+        <span style="font-family:var(--latin);font-weight:700;font-size:25px;line-height:1.05;color:#f3dc9f;">{{ v.kase }}</span>
+      </span>
+      <span style="flex:1;min-width:220px;display:flex;flex-direction:column;gap:6px;">
+        <span style="font-size:12px;letter-spacing:.12em;color:var(--gold-deep);">判定结果</span>
+        <span style="font-family:var(--serif);font-weight:700;font-size:21px;line-height:1.35;color:var(--ink);">{{ v.title }}</span>
+        <span style="font-size:14px;line-height:1.7;color:var(--ink-soft);">{{ v.summary }}</span>
+      </span>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin:18px 0">
-      <div style="background:var(--card);border-radius:10px;border:1px solid var(--line);padding:14px 16px">
-        <div style="font-family:var(--serif);font-size:12px;color:var(--gold-deep);letter-spacing:.08em;margin-bottom:5px">业绩清零</div>
-        <div style="font-family:var(--serif);font-weight:700;font-size:20px;color:var(--ink)">{{ vReset }}</div>
-      </div>
-      <div style="background:var(--card);border-radius:10px;border:1px solid var(--line);padding:14px 16px">
-        <div style="font-family:var(--serif);font-size:12px;color:var(--gold-deep);letter-spacing:.08em;margin-bottom:5px">费用</div>
-        <div style="font-family:var(--serif);font-weight:700;font-size:20px;color:var(--ink)">{{ vQuote }}</div>
-      </div>
-      <div style="background:var(--card);border-radius:10px;border:1px solid var(--line);padding:14px 16px">
-        <div style="font-family:var(--serif);font-size:12px;color:var(--gold-deep);letter-spacing:.08em;margin-bottom:5px">资格要求</div>
-        <div style="font-size:13px;line-height:1.6;color:var(--ink)">{{ vQual }}</div>
-      </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;">
+      <sc-for list="{{ v.stats }}" as="s" hint-placeholder-count="3">
+        <div style="{{ s.boxStyle }}">
+          <span style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--ink-soft);"><span style="{{ s.dotStyle }}"></span>{{ s.k }}</span>
+          <span style="{{ s.valStyle }}">{{ s.v }}</span>
+        </div>
+      </sc-for>
     </div>
-    <div style="background:var(--card);border-radius:10px;border:1px solid var(--line);border-left:3px solid var(--gold);padding:14px 18px;margin-bottom:14px">
-      <div style="font-family:var(--serif);font-size:12px;color:var(--gold-deep);letter-spacing:.08em;margin-bottom:5px">需谁同意</div>
-      <div style="font-size:14px;line-height:1.75;color:var(--ink);white-space:pre-line">{{ vAgree }}</div>
+  </section>
+
+  <section style="border-radius:18px;border:1px solid var(--line);background:var(--card);padding:20px 20px 18px;">
+    <div style="display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:18px;">
+      <h4 style="margin:0;font-family:var(--serif);font-weight:700;font-size:16px;color:var(--ink);">办理流程</h4>
+      <span style="display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-faint);"><span style="width:10px;height:10px;border-radius:50%;background:var(--gold);"></span>这个情形要特别注意的步骤</span>
     </div>
-    <div style="background:var(--ink);border-radius:var(--r,14px);color:#fff;padding:16px 18px">
-      <div style="font-family:var(--serif);font-size:12px;color:var(--gold-lt);letter-spacing:.08em;margin-bottom:7px">必须附上</div>
-      <div style="font-size:14px;line-height:1.85;white-space:pre-line">{{ vExtra }}</div>
-    </div>
+    <ol class="rj-steps">
+      <sc-for list="{{ v.steps }}" as="st" hint-placeholder-count="5">
+        <li class="rj-step">
+          <sc-if value="{{ st.hasLine }}" hint-placeholder-val="{{ true }}"><span class="rj-line"></span></sc-if>
+          <span style="{{ st.numStyle }}">{{ st.n }}</span>
+          <span style="display:flex;flex-direction:column;gap:5px;min-width:0;">
+            <span style="font-weight:600;font-size:13.5px;line-height:1.45;color:var(--ink);overflow-wrap:anywhere;">{{ st.t }}</span>
+            <span style="{{ st.whoStyle }}">{{ st.who }}</span>
+            <sc-if value="{{ st.hasD }}" hint-placeholder-val="{{ false }}">
+              <span style="font-size:12px;line-height:1.6;color:var(--ink-soft);">{{ st.d }}</span>
+            </sc-if>
+          </span>
+        </li>
+      </sc-for>
+    </ol>
+  </section>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:16px;">
+    <section style="border-radius:18px;border:1px solid var(--line);background:var(--card);overflow:hidden;">
+      <h4 style="margin:0;padding:16px 18px 12px;font-family:var(--serif);font-weight:700;font-size:16px;color:var(--ink);">必须附上</h4>
+      <table style="width:100%;border-collapse:collapse;font-size:13.5px;">
+        <thead>
+          <tr>
+            <th style="text-align:left;padding:9px 18px;font-weight:500;font-size:12px;color:var(--ink-soft);background:var(--paper-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);width:36px;">#</th>
+            <th style="text-align:left;padding:9px 8px;font-weight:500;font-size:12px;color:var(--ink-soft);background:var(--paper-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);">项目</th>
+            <th style="text-align:left;padding:9px 18px 9px 8px;font-weight:500;font-size:12px;color:var(--ink-soft);background:var(--paper-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);white-space:nowrap;">负责</th>
+          </tr>
+        </thead>
+        <tbody>
+          <sc-for list="{{ v.checklist }}" as="c" hint-placeholder-count="4">
+            <tr>
+              <td style="padding:11px 18px;border-bottom:1px solid var(--line);font-family:var(--latin);font-weight:700;color:var(--gold-deep);vertical-align:top;">{{ c.n }}</td>
+              <td style="padding:11px 8px;border-bottom:1px solid var(--line);line-height:1.6;color:var(--ink);">{{ c.t }}</td>
+              <td style="padding:11px 18px 11px 8px;border-bottom:1px solid var(--line);vertical-align:top;"><span style="{{ c.whoStyle }}">{{ c.who }}</span></td>
+            </tr>
+          </sc-for>
+        </tbody>
+      </table>
+    </section>
+
+    <sc-if value="{{ v.showChart }}" hint-placeholder-val="{{ true }}">
+      <section style="border-radius:18px;border:1px solid var(--line);background:var(--card);padding:16px 18px 18px;display:flex;flex-direction:column;gap:14px;">
+        <div style="display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px;">
+          <h4 style="margin:0;font-family:var(--serif);font-weight:700;font-size:16px;color:var(--ink);">申请期限</h4>
+          <span style="font-size:12px;color:var(--ink-faint);">从最近一次上课或工具记录起算</span>
+        </div>
+        <sc-for list="{{ chart.rows }}" as="r" hint-placeholder-count="3">
+          <div style="display:flex;flex-direction:column;gap:5px;">
+            <span style="{{ r.labelStyle }}">{{ r.label }}</span>
+            <div style="display:flex;height:30px;border-radius:9px;overflow:hidden;">
+              <sc-for list="{{ r.segs }}" as="sg" hint-placeholder-count="2">
+                <span style="{{ sg.style }}">{{ sg.t }}</span>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+        <div style="position:relative;height:18px;border-top:1px solid var(--rule);margin-top:-4px;">
+          <sc-for list="{{ chart.ticks }}" as="tk" hint-placeholder-count="4">
+            <span style="{{ tk.style }}">{{ tk.t }}</span>
+          </sc-for>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:12px;font-size:11.5px;color:var(--ink-soft);">
+          <sc-for list="{{ chart.legend }}" as="lg" hint-placeholder-count="3">
+            <span style="display:inline-flex;align-items:center;gap:6px;"><span style="{{ lg.sw }}"></span>{{ lg.t }}</span>
+          </sc-for>
+        </div>
+      </section>
+    </sc-if>
   </div>
+
+  <section style="border-radius:18px;border:1px solid var(--line);background:var(--card);overflow:hidden;">
+    <div style="display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px;padding:16px 18px 12px;">
+      <h4 style="margin:0;font-family:var(--serif);font-weight:700;font-size:16px;color:var(--ink);">全部情形对照</h4>
+      <span style="font-size:12px;color:var(--ink-faint);">点任意一行，直接切换到那个情形</span>
+    </div>
+    <div style="overflow-x:auto;">
+      <table style="width:100%;min-width:700px;border-collapse:collapse;font-size:13px;">
+        <thead>
+          <tr>
+            <sc-for list="{{ overviewHead }}" as="h" hint-placeholder-count="4">
+              <th style="text-align:left;padding:9px 14px;font-weight:500;font-size:12px;color:var(--ink-soft);background:var(--paper-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);white-space:nowrap;">{{ h }}</th>
+            </sc-for>
+          </tr>
+        </thead>
+        <tbody>
+          <sc-for list="{{ overview }}" as="ro" hint-placeholder-count="6">
+            <tr onClick="{{ ro.onPick }}" class="hov" style="{{ ro.rowStyle }}">
+              <td style="{{ ro.firstStyle }}"><span style="font-family:var(--latin);font-weight:700;color:var(--gold-deep);margin-right:8px;">{{ ro.kase }}</span>{{ ro.name }}</td>
+              <td style="padding:10px 14px;border-bottom:1px solid var(--line);"><span style="{{ ro.feeStyle }}">{{ ro.fee }}</span></td>
+              <td style="padding:10px 14px;border-bottom:1px solid var(--line);"><span style="{{ ro.resetStyle }}">{{ ro.reset }}</span></td>
+              <td style="padding:10px 14px;border-bottom:1px solid var(--line);color:var(--ink-soft);white-space:pre-line;line-height:1.55;min-width:180px;">{{ ro.agree }}</td>
+            </tr>
+          </sc-for>
+        </tbody>
+      </table>
+    </div>
+  </section>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:900,&quot;height&quot;:560}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1000,&quot;height&quot;:1400}}">
 class Component extends DCLogic {
   state = { scope: 'in', change: 'inv', ret: 'lt6', due: 'ok' };
-  set(k, v) { return () => this.setState({ [k]: v }); }
 
-  effChange() {
-    const s = this.state;
-    if (s.scope === 'new' && (s.change === 'place' || s.change === 'ret')) return 'inv';
-    if (s.scope === 'acct' && s.change === 'ret') return 'inv';
-    return s.change;
+  TONES = {
+    bad: ['var(--bad,#b91c1c)', 'var(--bad-bg,#fef2f2)'],
+    warn: ['var(--warn,#b45309)', 'var(--warn-bg,#fffbeb)'],
+    ok: ['var(--ok,#15803d)', 'var(--ok-bg,#f0fdf4)'],
+    gold: ['var(--gold-deep)', 'var(--card-2)'],
+    mute: ['var(--ink-soft)', 'var(--paper-2)']
+  };
+  WHO = { 学员: 'ink', 客服: 'gold', 原邀约人: 'warn', 公司: 'mute', 上级: 'mute' };
+
+  svg(html, size) {
+    return React.createElement('svg', { width: size, height: size, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2.6, strokeLinecap: 'round', strokeLinejoin: 'round', style: { display: 'block' }, dangerouslySetInnerHTML: { __html: html } });
   }
 
-  btn(on, dis) {
-    const base = 'text-align:left;padding:10px 13px;font-size:13.5px;font-family:inherit;cursor:pointer;border-radius:10px;border:1px solid var(--line);line-height:1.4;transition:background .15s,border-color .15s;';
-    if (dis) return base + 'background:var(--card);color:var(--ink-faint);opacity:.45;pointer-events:none;';
-    if (on) return base + 'background:var(--ink);border-color:var(--ink);color:#fff;';
-    return base + 'background:var(--card);color:var(--ink);';
+  norm(st) {
+    const s = Object.assign({}, this.state, st || {});
+    if (s.scope === 'new' && (s.change === 'place' || s.change === 'ret')) s.change = 'inv';
+    if (s.scope === 'acct' && s.change === 'ret') s.change = 'inv';
+    return s;
   }
 
-  // 改邀约人（含改团队）一律按 6.1 流程：学员本人填表、RM600、业绩及级别清零；改安置人一律报价
-  movesInv() { return this.state.scope !== 'acct' && this.effChange() !== 'place'; }
-  // 例外：归还原邀约人未满半年 —— 免费、不清零、无需同意
-  freeReturn() { return this.state.scope === 'in' && this.effChange() === 'ret' && this.state.ret === 'lt6'; }
+  // 规则（与手册 6.1–6.3 一致）：
+  //  改邀约人（含改团队）：学员本人填表、登记邮箱提交、RM600、业绩及级别清零；未满申请期限另须原邀约人签名
+  //  归还原邀约人：未满半年免费、不清零、无需同意；超过半年按改邀约人正常流程
+  //  改安置人：不论有没有业绩都要报价、清零；自户口推荐人换户口：免费、不清零
+  decide(st) {
+    const s = this.norm(st);
+    const freeRet = s.scope === 'in' && s.change === 'ret' && s.ret === 'lt6';
+    const inv = !freeRet && s.scope !== 'acct' && s.change !== 'place';
+    const early = inv && s.due === 'early';
+    const r = { s, freeRet, inv, early, showChart: inv || freeRet };
 
-  decide() {
-    const s = this.state;
-    const change = this.effChange();
-    let r = { kase: '', title: '', qual: '无资格要求', agree: '无需同意，直接申请', reset: '清零', quote: '需报价', extra: ['写明申请理由'] };
+    if (s.scope === 'new') { r.kase = s.change === 'both' ? '1.2' : '1.1'; r.title = s.change === 'both' ? '改团队申请 · 邀约人＋安置人' : '改团队申请 · 仅改邀约人'; }
+    else if (s.scope === 'in') {
+      r.kase = { inv: '2.1a', both: '2.2', place: '2.3', ret: '2.1b' }[s.change];
+      r.title = { inv: '团队内部 · 仅改邀约人', both: '团队内部 · 改邀约人＋安置人', place: '团队内部 · 只改安置人', ret: '团队内部 · 归还原邀约人' + (s.ret === 'lt6' ? '（未满半年）' : '（超过半年）') }[s.change];
+    } else { r.kase = s.change === 'place' ? '3.2' : '3.1'; r.title = s.change === 'place' ? '自户口 · 安置人 户口1 → 户口2' : '自户口 · 推荐人 户口1 → 户口2'; }
 
-    if (this.freeReturn()) {
-      r.kase = '2.1b'; r.title = '团队内部 · 归还原邀约人（未满半年）';
-      r.reset = '不清零'; r.quote = '免费'; r.qual = '无资格要求（归还未满半年）'; r.agree = '无需原邀约人同意';
-      r.extra = ['学员本人填写申请表，用登记邮箱提交（后台已不能申请）', '写明申请理由', '致电学员确认介绍人（话术见 6.3）'];
-    } else if (this.movesInv()) {
-      const early = s.due === 'early';
-      if (s.scope === 'new') { r.kase = change === 'both' ? '1.2' : '1.1'; r.title = change === 'both' ? '改团队申请 · 邀约人＋安置人' : '改团队申请 · 仅改邀约人'; }
-      else if (change === 'inv') { r.kase = '2.1a'; r.title = '团队内部 · 仅改邀约人'; }
-      else if (change === 'both') { r.kase = '2.2'; r.title = '团队内部 · 改邀约人＋安置人'; }
-      else { r.kase = '2.1b'; r.title = '团队内部 · 归还原邀约人（超过半年）'; }
-      r.reset = '清零（业绩及级别）';
-      r.quote = 'RM600 手续费';
-      r.qual = early ? '未满申请期限' : '已满申请期限';
-      r.agree = early ? '学员本人申请\n＋ 原邀约人同意，并在申请表签名' : '学员本人申请即可';
-      r.extra = ['学员本人填写《更换邀约人业务申请表》并签名', '用学员登记邮箱发送到 csshuyi5796@gmail.com'];
-      if (early) r.extra.push('原邀约人在申请表签名');
-      r.extra.push('写明申请理由', '新邀约人须已完款工具', '致电学员确认介绍人（话术见 6.3）', '公司审核获批后，学员本人缴付 RM600');
-    } else if (s.scope === 'in') {
-      r.kase = '2.3'; r.title = '团队内部 · 只改安置人';
-    } else if (change === 'place') {
-      r.kase = '3.2'; r.title = '自户口 · 安置人 户口1 → 户口2'; r.quote = '需报价';
+    if (freeRet) {
+      r.fee = ['免费', 'ok']; r.reset = ['不清零', 'ok']; r.agree = ['无需原邀约人同意', 'ok'];
+      r.summary = '归还原邀约人且未满半年：免费、业绩不清零、不用原邀约人同意，仍由学员本人填表、用登记邮箱提交。';
+      r.steps = [
+        { t: '学员本人填写申请表并签名', who: '学员' },
+        { t: '用登记邮箱发到 csshuyi5796@gmail.com', who: '学员' },
+        { t: '核实资料，致电确认介绍人', who: '客服', d: '话术见 6.3' },
+        { t: '确认归还未满半年', who: '客服', hi: true, d: '从最近一次记录起算' },
+        { t: '公司审核', who: '公司' },
+        { t: '办理归还：免费、不清零', who: '公司', hi: true }
+      ];
+      r.checklist = [['学员本人填写申请表并签名', '学员'], ['用学员登记邮箱提交', '学员'], ['写明申请理由', '学员'], ['致电学员确认介绍人', '客服']];
+    } else if (inv) {
+      r.fee = ['RM600 手续费', 'warn']; r.reset = ['清零（业绩及级别）', 'bad'];
+      r.agree = early ? ['学员本人 ＋ 原邀约人签名', 'warn'] : ['学员本人申请即可', 'mute'];
+      r.summary = (s.scope === 'new' ? '改团队也一样要报价：' : '') + '学员本人填表、用登记邮箱提交，公司审核获批后缴付 RM600，业绩及级别清零、无法恢复' + (early ? '；未满申请期限，须原邀约人同意并在申请表签名。' : '。');
+      r.steps = [
+        { t: '学员本人填写申请表并签名', who: '学员' },
+        { t: '用登记邮箱发到 csshuyi5796@gmail.com', who: '学员' },
+        { t: '核实资料，致电确认介绍人', who: '客服', d: '话术见 6.3' }
+      ];
+      if (early) r.steps.push({ t: '原邀约人同意并在申请表签名', who: '原邀约人', hi: true, d: '未满申请期限' });
+      r.steps.push({ t: '公司最终审核', who: '公司' }, { t: '获批后通知学员缴付 RM600', who: '客服', hi: true }, { t: '办理更换，业绩及级别清零', who: '公司', hi: true });
+      r.checklist = [['学员本人填写《更换邀约人业务申请表》并签名', '学员'], ['用学员登记邮箱发到 csshuyi5796@gmail.com', '学员']];
+      if (early) r.checklist.push(['原邀约人在申请表签名', '原邀约人']);
+      r.checklist.push(['写明申请理由', '学员'], ['新邀约人须已完款工具', '客服'], ['致电学员确认介绍人（话术见 6.3）', '客服'], ['获批后缴付 RM600', '学员']);
+    } else if (s.scope === 'acct' && s.change !== 'place') {
+      r.fee = ['免费', 'ok']; r.reset = ['不清零', 'ok']; r.agree = ['无需同意', 'ok'];
+      r.summary = '自己户口之间调整推荐人：免费、不清零，写明理由，由上级评估。';
+      r.steps = [{ t: '提交申请，写明理由', who: '学员' }, { t: '上级评估', who: '上级', hi: true }, { t: '办理：免费、不清零', who: '公司' }];
+      r.checklist = [['写明申请理由', '学员']];
     } else {
-      r.kase = '3.1'; r.title = '自户口 · 推荐人 户口1 → 户口2'; r.reset = '不清零'; r.quote = '免费';
+      r.fee = ['需报价', 'warn']; r.reset = ['清零', 'bad']; r.agree = ['无需同意', 'ok'];
+      r.summary = '改安置人不论有没有业绩都要报价，业绩清零；不需要任何人同意。';
+      r.steps = [{ t: '提交申请，写明理由', who: '学员' }, { t: '报价（不论有没有业绩）', who: '公司', hi: true }, { t: '办理更换，业绩清零', who: '公司' }];
+      r.checklist = [['写明申请理由', '学员']];
     }
-    r.extra = r.extra.map((x, i) => (i + 1) + '. ' + x).join('\n');
     return r;
   }
 
+  tone(t) { return this.TONES[t] || this.TONES.mute; }
+  pill(t, extra) { const c = this.tone(t); return 'display:inline-block;padding:2px 10px;border-radius:999px;font-size:12px;font-weight:600;line-height:1.7;white-space:nowrap;color:' + c[0] + ';background:' + c[1] + ';' + (extra || ''); }
+  whoStyle(w) {
+    const k = this.WHO[w] || 'mute';
+    if (k === 'ink') return 'align-self:flex-start;display:inline-block;padding:1px 9px;border-radius:999px;font-size:11.5px;font-weight:500;color:#fafaf9;background:var(--ink);white-space:nowrap;';
+    return this.pill(k, 'align-self:flex-start;font-size:11.5px;font-weight:500;');
+  }
+
+  opt(label, on, dis, onPick) {
+    const base = 'display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 13px 0 9px;border-radius:12px;font-family:inherit;font-size:13.5px;text-align:left;cursor:pointer;transition:background-color .15s,border-color .15s,color .15s;';
+    let style;
+    if (dis) style = base + 'border:1px dashed var(--rule);background:transparent;color:var(--ink-faint);opacity:.55;pointer-events:none;';
+    else if (on) style = base + 'border:1px solid var(--ink);background:var(--ink);color:#fff;box-shadow:0 6px 16px rgba(28,25,23,.16);';
+    else style = base + 'border:1px solid var(--line);background:var(--card);color:var(--ink);';
+    const dot = 'flex:0 0 auto;width:18px;height:18px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;'
+      + (on && !dis ? 'background:#c99a3b;color:#1c1917;' : 'border:1.5px solid ' + (dis ? 'var(--rule)' : '#c9b98f') + ';');
+    return { label, style, dotStyle: dot, pressed: on ? 'true' : 'false', check: on && !dis ? this.svg('<path d="M20 6 9 17l-5-5"/>', 11) : null, onPick: () => this.setState(onPick) };
+  }
+
   renderVals() {
-    const s = this.state, r = this.decide();
-    const eq = this.effChange();
-    const disPlace = s.scope === 'new', disRet = s.scope !== 'in';
-    const inv = this.movesInv(), disRetTime = this.effChange() !== 'ret' || s.scope !== 'in', disDue = !inv || this.freeReturn();
-    const half = 'flex:1;';
+    const S = this.state, r = this.decide();
+    const s = r.s;
+    const card = (active) => 'position:relative;display:flex;flex-direction:column;gap:14px;padding:16px;border-radius:18px;background:var(--card);border:1px solid ' + (active ? 'var(--gold-lt)' : 'var(--line)') + ';box-shadow:' + (active ? '0 10px 26px rgba(138,100,32,.08)' : 'none') + ';';
+    const num = (done) => 'flex:0 0 auto;width:30px;height:30px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-family:var(--latin);font-weight:700;font-size:16px;' + (done ? 'background:var(--ink);color:#f3dc9f;' : 'background:var(--paper-2);color:var(--ink-faint);');
+    const col = 'display:flex;flex-direction:column;gap:6px;', row = 'display:flex;flex-wrap:wrap;gap:6px;';
+
+    const scopeOpts = [['new', '改去新团队（改团队申请）'], ['in', '团队内部调整'], ['acct', '自己户口 1 ↔ 户口 2']]
+      .map(([k, l]) => this.opt(l, S.scope === k, false, { scope: k }));
+    const changeOpts = [['inv', '仅改邀约人', false], ['both', '邀约人 ＋ 安置人', false], ['place', '只改安置人', S.scope === 'new'], ['ret', '归还原邀约人', S.scope !== 'in']]
+      .map(([k, l, dis]) => this.opt(l, s.change === k, dis, { change: k }));
+    const showRet = s.scope === 'in' && s.change === 'ret';
+    const showDue = r.inv;
+    const groups3 = [];
+    if (showRet) groups3.push({ hasLabel: true, label: '归还多久', wrapStyle: row, hasHint: false, hint: '',
+      opts: [['lt6', '未满半年'], ['gt6', '超过半年']].map(([k, l]) => this.opt(l, S.ret === k, false, { ret: k })) });
+    if (showDue) groups3.push({ hasLabel: true, label: '满申请期限了吗', wrapStyle: row, hasHint: true,
+      hint: '只有上课记录：最近一次上课满 6 个月；有工具购买：最近一次上课或工具记录满 1 年。',
+      opts: [['ok', '已满'], ['early', '未满']].map(([k, l]) => this.opt(l, S.due === k, false, { due: k })) });
+    const step3Idle = !groups3.length;
+
+    const scopeLabel = scopeOpts.find((o) => o.pressed === 'true').label;
+    const changeLabel = (changeOpts.find((o) => o.pressed === 'true') || {}).label || '';
+
+    const questions = [
+      { n: '1', title: '操作范围', sub: scopeLabel, hasArrow: true, isIdle: false, idleText: '', cardStyle: card(true), numStyle: num(true),
+        groups: [{ hasLabel: false, label: '', wrapStyle: col, hasHint: false, hint: '', opts: scopeOpts }] },
+      { n: '2', title: '改什么', sub: changeLabel, hasArrow: true, isIdle: false, idleText: '', cardStyle: card(true), numStyle: num(true),
+        groups: [{ hasLabel: false, label: '', wrapStyle: col, hasHint: true, opts: changeOpts,
+          hint: s.scope === 'new' ? '改团队申请只涉及邀约人（可带安置人）。' : (s.scope === 'acct' ? '自户口调整只分推荐人与安置人。' : '归还＝把邀约人改回原本那一位。') }] },
+      { n: '3', title: '时间条件', sub: step3Idle ? '这个情形不看' : (showRet && showDue ? '归还多久 · 申请期限' : (showRet ? '归还多久' : '申请期限')),
+        hasArrow: false, isIdle: step3Idle, idleText: '这个情形不需要看时间条件', cardStyle: card(!step3Idle), numStyle: num(!step3Idle), groups: groups3 }
+    ];
+
+    const stat = (k, pair) => {
+      const c = this.tone(pair[1]);
+      return { k, v: pair[0],
+        boxStyle: 'display:flex;flex-direction:column;gap:6px;padding:12px 14px;border-radius:14px;background:var(--card);border:1px solid var(--line);box-shadow:inset 3px 0 0 ' + c[0] + ';',
+        dotStyle: 'width:8px;height:8px;border-radius:50%;background:' + c[0] + ';',
+        valStyle: 'font-family:var(--serif);font-weight:700;font-size:18px;line-height:1.35;color:' + c[0] + ';' };
+    };
+    const steps = r.steps.map((x, i) => ({
+      n: String(i + 1), t: x.t, who: x.who, d: x.d || '', hasD: !!x.d, hasLine: i < r.steps.length - 1,
+      whoStyle: this.whoStyle(x.who),
+      numStyle: 'position:relative;z-index:1;flex:0 0 auto;width:34px;height:34px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-family:var(--latin);font-weight:700;font-size:17px;'
+        + (x.hi ? 'background:#c99a3b;color:#1c1917;box-shadow:0 0 0 5px rgba(201,154,59,.2);' : 'background:var(--card);color:var(--ink);border:1.5px solid var(--rule);')
+    }));
+    const v = {
+      kase: r.kase, title: r.title, summary: r.summary,
+      stats: [stat('费用', r.fee), stat('业绩及级别', r.reset), stat('需谁同意', r.agree)],
+      steps, showChart: r.showChart,
+      checklist: r.checklist.map(([t, who], i) => ({ n: String(i + 1).padStart(2, '0'), t, who, whoStyle: this.whoStyle(who) }))
+    };
+
+    // 申请期限图：0–18 个月
+    const pct = (m) => (m / 18 * 100).toFixed(2) + '%';
+    const seg = (from, to, t, kind) => {
+      const bg = { wait: 'repeating-linear-gradient(135deg,#fffbeb 0 8px,#fef3c7 8px 16px);color:var(--warn,#b45309);',
+        open: 'var(--card-2);color:var(--gold-deep);', free: 'var(--ok-bg,#f0fdf4);color:var(--ok,#15803d);' }[kind];
+      return { t, style: 'flex:0 0 ' + pct(to - from) + ';display:flex;align-items:center;justify-content:center;padding:0 6px;font-size:11.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:' + bg };
+    };
+    const lab = (on) => 'font-size:12.5px;font-weight:' + (on ? '600' : '400') + ';color:' + (on ? 'var(--ink)' : 'var(--ink-soft)') + ';';
+    const rows = [];
+    if (showRet) rows.push({ label: '归还原邀约人', labelStyle: lab(true), segs: [seg(0, 6, '免费 · 不清零', 'free'), seg(6, 18, '超过半年：RM600 · 清零', 'open')] });
+    rows.push({ label: '只有上课记录（没有工具购买）', labelStyle: lab(r.inv), segs: [seg(0, 6, '未满：原邀约人签名', 'wait'), seg(6, 18, '可申请', 'open')] });
+    rows.push({ label: '有工具购买记录', labelStyle: lab(r.inv), segs: [seg(0, 12, '未满：原邀约人签名', 'wait'), seg(12, 18, '可申请', 'open')] });
+    const tick = (m, t) => ({ t, style: 'position:absolute;top:4px;left:' + pct(m) + ';transform:translateX(' + (m === 0 ? '0' : m === 18 ? '-100%' : '-50%') + ');font-size:11px;color:var(--ink-faint);white-space:nowrap;' });
+    const chart = { rows, ticks: [tick(0, '0'), tick(6, '6 个月'), tick(12, '1 年'), tick(18, '之后')],
+      legend: [
+        { t: '未满期限', sw: 'width:14px;height:10px;border-radius:3px;background:repeating-linear-gradient(135deg,#fffbeb 0 4px,#fef3c7 4px 8px);border:1px solid #fde68a;' },
+        { t: '可申请（RM600）', sw: 'width:14px;height:10px;border-radius:3px;background:var(--card-2);border:1px solid var(--gold-lt);' },
+        { t: '免费归还期', sw: 'width:14px;height:10px;border-radius:3px;background:var(--ok-bg,#f0fdf4);border:1px solid #bbf7d0;' }
+      ] };
+
+    // 全部情形对照
+    const cases = [
+      ['1.1', '改团队 · 仅改邀约人', { scope: 'new', change: 'inv' }],
+      ['1.2', '改团队 · 邀约人＋安置人', { scope: 'new', change: 'both' }],
+      ['2.1a', '团队内 · 仅改邀约人', { scope: 'in', change: 'inv' }],
+      ['2.1b', '归还原邀约人 · 未满半年', { scope: 'in', change: 'ret', ret: 'lt6' }],
+      ['2.1b', '归还原邀约人 · 超过半年', { scope: 'in', change: 'ret', ret: 'gt6' }],
+      ['2.2', '团队内 · 邀约人＋安置人', { scope: 'in', change: 'both' }],
+      ['2.3', '团队内 · 只改安置人', { scope: 'in', change: 'place' }],
+      ['3.1', '自户口 · 推荐人换户口', { scope: 'acct', change: 'inv' }],
+      ['3.2', '自户口 · 安置人换户口', { scope: 'acct', change: 'place' }]
+    ];
+    const overview = cases.map(([kase, name, st]) => {
+      const x = this.decide(Object.assign({ due: 'ok' }, st));
+      const cur = x.kase === r.kase && (kase !== '2.1b' || x.s.ret === s.ret);
+      const agree = x.inv ? '满期限：学员本人\n未满：加原邀约人签名' : x.agree[0];
+      return { kase, name, fee: x.fee[0], reset: x.reset[0], agree,
+        feeStyle: this.pill(x.fee[1]), resetStyle: this.pill(x.reset[1]),
+        rowStyle: 'cursor:pointer;' + (cur ? 'background:var(--card-2);' : ''),
+        firstStyle: 'padding:10px 14px;border-bottom:1px solid var(--line);white-space:nowrap;color:var(--ink);font-weight:' + (cur ? '700' : '500') + ';box-shadow:' + (cur ? 'inset 3px 0 0 var(--gold)' : 'none') + ';',
+        onPick: () => this.setState(st) };
+    });
+
     return {
-      bNew: this.btn(s.scope === 'new'), bIn: this.btn(s.scope === 'in'), bAcct: this.btn(s.scope === 'acct'),
-      setNew: this.set('scope', 'new'), setIn: this.set('scope', 'in'), setAcct: this.set('scope', 'acct'),
-      bInv: this.btn(s.change === 'inv'), bBoth: this.btn(s.change === 'both'),
-      bPlace: this.btn(s.change === 'place', disPlace), bRet: this.btn(s.change === 'ret', disRet),
-      setInv: this.set('change', 'inv'), setBoth: this.set('change', 'both'), setPlace: this.set('change', 'place'), setRet: this.set('change', 'ret'),
-      bRetL: this.btn(s.ret === 'lt6', disRetTime) + half, bRetG: this.btn(s.ret === 'gt6', disRetTime) + half,
-      setRetL: this.set('ret', 'lt6'), setRetG: this.set('ret', 'gt6'),
-      bDueOk: this.btn(s.due === 'ok', disDue) + half, bDueEarly: this.btn(s.due === 'early', disDue) + half,
-      setDueOk: this.set('due', 'ok'), setDueEarly: this.set('due', 'early'),
-      naNote: s.scope === 'new' ? '改团队申请只涉及邀约人（可带安置人），其余两项不适用。'
-        : (s.scope === 'acct' ? '自户口调整只分推荐人与安置人，不涉及归还。' : '归还＝把邀约人改回原本那一位：未满半年免费、不清零；超过半年按正常流程。'),
-      vTitle: r.title, vCase: r.kase, vQual: r.qual, vAgree: r.agree, vReset: r.reset, vQuote: r.quote, vExtra: r.extra
+      questions, v, chart, overview,
+      overviewHead: ['情形', '费用', '业绩及级别', '需谁同意'],
+      arrowEl: this.svg('<path d="M5 12h14"/><path d="m13 6 6 6-6 6"/>', 16)
     };
   }
 }
