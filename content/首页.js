@@ -24,7 +24,7 @@ CS.announcements = [
 //   title：标题  sub：下面一行小字
 CS.quicklinks = [
   { title:'话术总库', sub:'全站统一口径', icon:'book-open', go:'phrases' },
-  { title:'布告栏速查', sub:'物流 · 化解 · 费用', icon:'clipboard-list', go:'bd-logi' },
+  { title:'物流速查', sub:'发货 · 集运 · 包裹', icon:'truck', go:'bd-logi' },
   { title:'改邀约人／安置人', sub:'学员本人填表申请', icon:'user-round-check', go:'rl-apply' },
   { title:'停运编号对照', sub:'旧编号查现服务中心', icon:'users-round', go:'bd-team' },
   { title:'会员话术库', sub:'常问 Q&A', icon:'book-open', go:'hq-qam' },
@@ -37,11 +37,11 @@ CS.quicklinks = [
 // 我现在要办什么
 //   t：标题  s：下面一行小字
 CS.tasks = [
-  { t:'学员要买工具', s:'报价 · 下单 · 付款', icon:'shopping-bag', go:'os-train' },
+  { t:'学员要买工具', s:'报价 · 下单 · 付款', icon:'shopping-bag', go:'hq-buy' },
   { t:'查工具工期', s:'算出交付日', icon:'clock', go:'os-leadtime' },
   { t:'货到了 / 要发货', s:'物流全流程', icon:'truck', go:'bd-logi' },
   { t:'要改邀约人／安置人', s:'新申请流程 · RM600', icon:'user-round-check', go:'rl-apply' },
-  { t:'学员问价格', s:'统一报价口径', icon:'tag', go:'hq-order' },
+  { t:'学员问价格', s:'费用与价格总表', icon:'tag', go:'bd-fee' },
   { t:'服务中心要充电子币', s:'充值流程', icon:'coins', go:'hq-topup' },
   { t:'要报单 / 分单', s:'分配规则', icon:'list-checks', go:'hq-split' },
   { t:'不知道该说什么', s:'话术总库', icon:'message-square', go:'phrases' },
