@@ -28,10 +28,10 @@
       <p style="margin:8px 0 0;font-size:11.5px;line-height:1.6;color:var(--ink-faint)">{{ naNote }}</p>
     </div>
     <div>
-      <div style="font-family:var(--serif);font-weight:700;font-size:13px;color:var(--gold-deep);letter-spacing:.08em;margin-bottom:9px">3 · 有业绩吗（只改安置人）</div>
+      <div style="font-family:var(--serif);font-weight:700;font-size:13px;color:var(--gold-deep);letter-spacing:.08em;margin-bottom:9px">3 · 归还多久（仅归还原邀约人）</div>
       <div style="display:flex;gap:6px">
-        <button onClick="{{ setPY }}" style="{{ bPY }}">有业绩</button>
-        <button onClick="{{ setPN }}" style="{{ bPN }}">业绩 0</button>
+        <button onClick="{{ setRetL }}" style="{{ bRetL }}">未满半年</button>
+        <button onClick="{{ setRetG }}" style="{{ bRetG }}">超过半年</button>
       </div>
     </div>
     <div>
@@ -77,7 +77,7 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:900,&quot;height&quot;:560}}">
 class Component extends DCLogic {
-  state = { scope: 'in', change: 'inv', perf: 'y', due: 'ok' };
+  state = { scope: 'in', change: 'inv', ret: 'lt6', due: 'ok' };
   set(k, v) { return () => this.setState({ [k]: v }); }
 
   effChange() {
@@ -94,21 +94,26 @@ class Component extends DCLogic {
     return base + 'background:var(--card);color:var(--ink);';
   }
 
-  // 改邀约人（含归还原邀约人、改团队）一律按 6.1 新流程：学员本人填表、RM600、业绩及级别清零
+  // 改邀约人（含改团队）一律按 6.1 流程：学员本人填表、RM600、业绩及级别清零；改安置人一律报价
   movesInv() { return this.state.scope !== 'acct' && this.effChange() !== 'place'; }
+  // 例外：归还原邀约人未满半年 —— 免费、不清零、无需同意
+  freeReturn() { return this.state.scope === 'in' && this.effChange() === 'ret' && this.state.ret === 'lt6'; }
 
   decide() {
     const s = this.state;
     const change = this.effChange();
-    const hasPerf = s.perf === 'y';
-    let r = { kase: '', title: '', qual: '无资格要求', agree: '无需同意，直接申请', reset: '清零', quote: hasPerf ? '需报价' : '不报价', extra: ['写明申请理由'] };
+    let r = { kase: '', title: '', qual: '无资格要求', agree: '无需同意，直接申请', reset: '清零', quote: '需报价', extra: ['写明申请理由'] };
 
-    if (this.movesInv()) {
+    if (this.freeReturn()) {
+      r.kase = '2.1b'; r.title = '团队内部 · 归还原邀约人（未满半年）';
+      r.reset = '不清零'; r.quote = '免费'; r.qual = '无资格要求（归还未满半年）'; r.agree = '无需原邀约人同意';
+      r.extra = ['学员本人填写申请表，用登记邮箱提交（后台已不能申请）', '写明申请理由', '致电学员确认介绍人（话术见 6.3）'];
+    } else if (this.movesInv()) {
       const early = s.due === 'early';
       if (s.scope === 'new') { r.kase = change === 'both' ? '1.2' : '1.1'; r.title = change === 'both' ? '改团队申请 · 邀约人＋安置人' : '改团队申请 · 仅改邀约人'; }
       else if (change === 'inv') { r.kase = '2.1a'; r.title = '团队内部 · 仅改邀约人'; }
       else if (change === 'both') { r.kase = '2.2'; r.title = '团队内部 · 改邀约人＋安置人'; }
-      else { r.kase = '2.1b'; r.title = '团队内部 · 归还原邀约人'; }
+      else { r.kase = '2.1b'; r.title = '团队内部 · 归还原邀约人（超过半年）'; }
       r.reset = '清零（业绩及级别）';
       r.quote = 'RM600 手续费';
       r.qual = early ? '未满申请期限' : '已满申请期限';
@@ -131,7 +136,7 @@ class Component extends DCLogic {
     const s = this.state, r = this.decide();
     const eq = this.effChange();
     const disPlace = s.scope === 'new', disRet = s.scope !== 'in';
-    const inv = this.movesInv(), disPerf = inv || s.scope === 'acct', disDue = !inv;
+    const inv = this.movesInv(), disRetTime = this.effChange() !== 'ret' || s.scope !== 'in', disDue = !inv || this.freeReturn();
     const half = 'flex:1;';
     return {
       bNew: this.btn(s.scope === 'new'), bIn: this.btn(s.scope === 'in'), bAcct: this.btn(s.scope === 'acct'),
@@ -139,12 +144,12 @@ class Component extends DCLogic {
       bInv: this.btn(s.change === 'inv'), bBoth: this.btn(s.change === 'both'),
       bPlace: this.btn(s.change === 'place', disPlace), bRet: this.btn(s.change === 'ret', disRet),
       setInv: this.set('change', 'inv'), setBoth: this.set('change', 'both'), setPlace: this.set('change', 'place'), setRet: this.set('change', 'ret'),
-      bPY: this.btn(s.perf === 'y', disPerf) + half, bPN: this.btn(s.perf === 'n', disPerf) + half,
-      setPY: this.set('perf', 'y'), setPN: this.set('perf', 'n'),
+      bRetL: this.btn(s.ret === 'lt6', disRetTime) + half, bRetG: this.btn(s.ret === 'gt6', disRetTime) + half,
+      setRetL: this.set('ret', 'lt6'), setRetG: this.set('ret', 'gt6'),
       bDueOk: this.btn(s.due === 'ok', disDue) + half, bDueEarly: this.btn(s.due === 'early', disDue) + half,
       setDueOk: this.set('due', 'ok'), setDueEarly: this.set('due', 'early'),
       naNote: s.scope === 'new' ? '改团队申请只涉及邀约人（可带安置人），其余两项不适用。'
-        : (s.scope === 'acct' ? '自户口调整只分推荐人与安置人，不涉及归还。' : '归还＝把邀约人改回原本那一位，同样按新流程：填申请表、RM600、清零。'),
+        : (s.scope === 'acct' ? '自户口调整只分推荐人与安置人，不涉及归还。' : '归还＝把邀约人改回原本那一位：未满半年免费、不清零；超过半年按正常流程。'),
       vTitle: r.title, vCase: r.kase, vQual: r.qual, vAgree: r.agree, vReset: r.reset, vQuote: r.quote, vExtra: r.extra
     };
   }
