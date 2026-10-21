@@ -61,6 +61,7 @@ function blockText(b, CS) {
       list(b.rows).forEach((r) => out.push(r.g ? `【${r.g}】` : '| ' + list(r.c).map((v) => String(v).replace(/\n/g, '；')).join(' | ') + ' |'));
       break;
     case 'screen':
+      if (list(b.path).length) out.push('后台路径：' + list(b.path).join(' → '));
       list(b.steps).forEach((x, i) => out.push(`${i + 1}. ${x.t}${x.d ? '：' + x.d : ''}`));
       list(b.tips).forEach((x) => out.push(`【${{ tip: '提示', warn: '注意', staff: '客服注意' }[x.k] || '提示'}】${x.t}`));
       break;

@@ -14,6 +14,7 @@
 // 公告 · 更新提醒（显示在首页，最新的放最上面）
 //   tag：左边的小标签，比如 '更新 · 16.10.2023'、'制度'、'提醒'
 CS.announcements = [
+  { tag:'新增 · 服务中心后台', text:'手册新增服务中心后台教程：后台下单五步、代家人与第二账号、各工具下单注意事项、报单核实模板、新名字管理、新增化解记录与工单，以及总部地址和银行账号。', go:'sb-order' },
   { tag:'流程更新', text:'更换邀约人：服务中心后台已不能申请，改由学员本人填写申请表，用登记邮箱发到 csshuyi5796@gmail.com。每宗 RM600（获批后缴付），业绩及级别清零；归还原邀约人未满半年免费、不清零。', go:'rl-apply' },
   { tag:'更新 · 16.10.2023', text:'现货牌子发货新流程：不再发现货，统一有订单编号后，由客服通知服务中心才能发货；急用牌子请提早告知处理。', go:'lg-instock' },
   { tag:'制度', text:'后台下单期限：学员完款且手续齐全后，服务中心须在 3 个工作日内下单；逾期第一次暂停权限一个月，第二次永久停止。', go:'os-train' },
@@ -31,7 +32,8 @@ CS.quicklinks = [
   { title:'订单审核时间', sub:'9:00–11:30', icon:'clock', go:'hq-order' },
   { title:'工具工期', sub:'50–60 工作日', icon:'wrench', go:'os-leadtime' },
   { title:'分单流程', sub:'报单分配', icon:'list-checks', go:'hq-split' },
-  { title:'电子币充值', sub:'服务中心', icon:'coins', go:'hq-topup' }
+  { title:'电子币充值', sub:'服务中心', icon:'coins', go:'hq-topup' },
+  { title:'总部地址与账号', sub:'电话 · 收件 · 银行', icon:'landmark', go:'hq-contact' }
 ];
 
 // 我现在要办什么

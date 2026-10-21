@@ -35,8 +35,8 @@
  "flag_il": "assets/img/flags/il.png",
  "flag_ch": "assets/img/flags/ch.png",
  "flag_sa": "assets/img/flags/sa.png",
- "./%E6%94%B9%E7%BA%BF%E5%88%A4%E5%AE%9A%E5%99%A8.dc.html": "改线判定器.dc.html?v=20261019a",
- "./%E6%9C%8D%E5%8A%A1%E4%B8%AD%E5%BF%83%E5%88%A4%E5%AE%9A%E5%99%A8.dc.html": "服务中心判定器.dc.html?v=20261019a",
+ "./%E6%94%B9%E7%BA%BF%E5%88%A4%E5%AE%9A%E5%99%A8.dc.html": "改线判定器.dc.html?v=20261021a",
+ "./%E6%9C%8D%E5%8A%A1%E4%B8%AD%E5%BF%83%E5%88%A4%E5%AE%9A%E5%99%A8.dc.html": "服务中心判定器.dc.html?v=20261021a",
  "https://unpkg.com/react@18.3.1/umd/react.production.min.js": "assets/vendor/react.production.min.js",
  "https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js": "assets/vendor/react-dom.production.min.js"
 };</script>
@@ -53,9 +53,9 @@ window.addEventListener('error', function (e) {
   window.__csErrors.push(e.lineno ? file + ' 第 ' + e.lineno + ' 行：' + e.message : file + ' 没有加载成功');
 }, true);
 </script>
-<script src="content/首页.js?v=20261019a"></script>
-<script src="content/章节.js?v=20261019a"></script>
-<script src="content/汇率与工期.js?v=20261019a"></script>
+<script src="content/首页.js?v=20261021a"></script>
+<script src="content/章节.js?v=20261021a"></script>
+<script src="content/汇率与工期.js?v=20261021a"></script>
 <script>
 (function () {
   var need = { announcements: '首页', quicklinks: '首页', tasks: '首页', week: '首页',
@@ -143,6 +143,13 @@ input::placeholder{color:var(--ink-faint);}
 .lb-frame{padding:7px;border-radius:30px;background:#1c1917;box-shadow:0 18px 40px rgba(28,25,23,.18),inset 0 0 0 1px rgba(201,154,59,.45);}
 .lb-frame a{border-radius:24px;overflow:hidden;background:#fff;aspect-ratio:9/16;}
 .lb-frame img{width:100%;height:auto;}
+/* 服务中心后台：菜单路径卡 */
+.sb-path{width:220px;border-radius:14px;overflow:hidden;background:var(--card);border:1px solid var(--line);box-shadow:0 14px 32px rgba(28,25,23,.10);}
+.sb-bar{display:flex;align-items:center;gap:5px;padding:9px 12px;background:#1c1917;}
+.sb-bar i{width:7px;height:7px;border-radius:50%;background:rgba(250,250,249,.35);}
+.sb-bar span{margin-left:6px;font-size:11.5px;letter-spacing:.12em;color:#e7d3a3;}
+.sb-path ol{list-style:none;margin:0;padding:10px;display:flex;flex-direction:column;gap:6px;}
+.sb-cap{padding:0 12px 11px;font-size:12px;color:var(--ink-faint);text-align:center;}
 @media (max-width:1100px){ .lb-phone{width:170px;} }
 @media (max-width:760px){
   .lb-screen{grid-template-columns:1fr;padding:18px;}
@@ -312,7 +319,7 @@ input::placeholder{color:var(--ink-faint);}
                         </div>
                         <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--line);display:flex;gap:12px;align-items:flex-start;">
                           <span style="font-family:var(--latin);font-weight:700;font-size:14px;color:var(--ink-faint);">A</span>
-                          <span style="flex:1;font-size:14.5px;line-height:1.8;color:var(--ink);">{{ qa.a }}</span>
+                          <span style="flex:1;font-size:14.5px;line-height:1.8;color:var(--ink);white-space:pre-line;">{{ qa.a }}</span>
                           <sc-if value="{{ qa.canCopy }}" hint-placeholder-val="{{ true }}">
                             <button sc-camel-on-click="{{ qa.onCopy }}" style="{{ qa.copyStyle }}"><span style="display:inline-flex;">{{ qa.copyIcon }}</span><span>{{ qa.copyLabel }}</span></button>
                           </sc-if>
@@ -641,7 +648,7 @@ input::placeholder{color:var(--ink-faint);}
                             </div>
                             <div style="display:flex;gap:12px;align-items:flex-start;margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);">
                               <span style="flex:0 0 auto;width:26px;height:26px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;background:var(--gold-deep);color:#fff;font-family:var(--latin);font-weight:700;font-size:15px;">A</span>
-                              <span style="flex:1;font-size:14.5px;line-height:1.75;color:var(--ink-soft);">{{ qa.a }}</span>
+                              <span style="flex:1;font-size:14.5px;line-height:1.75;color:var(--ink-soft);white-space:pre-line;">{{ qa.a }}</span>
                               <sc-if value="{{ qa.canCopy }}" hint-placeholder-val="{{ false }}">
                                 <button sc-camel-on-click="{{ qa.onCopy }}" title="复制话术" style="{{ qa.copyStyle }}"><span style="display:inline-flex;">{{ qa.copyIcon }}</span><span>{{ qa.copyLabel }}</span></button>
                               </sc-if>
@@ -676,7 +683,7 @@ input::placeholder{color:var(--ink-faint);}
 
                 <sc-if value="{{ b.isScreen }}" hint-placeholder-val="{{ false }}">
                   <sc-if value="{{ b.hasTitle }}" hint-placeholder-val="{{ false }}"><h3 style="font-family:var(--serif);font-weight:700;font-size:18px;color:var(--ink);margin:0 0 16px;display:flex;align-items:center;gap:12px;"><span style="width:4px;height:18px;border-radius:2px;background:var(--gold);"></span>{{ b.title }}</h3></sc-if>
-                  <div class="lb-screen">
+                  <div class="lb-screen" style="{{ b.screenStyle }}">
                     <div style="display:flex;flex-direction:column;gap:14px;min-width:0;">
                       <ol style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;">
                         <sc-for list="{{ b.steps }}" as="st" hint-placeholder-count="4">
@@ -695,6 +702,17 @@ input::placeholder{color:var(--ink-faint);}
                       </sc-for>
                     </div>
                     <div class="lb-phones">
+                      <sc-if value="{{ b.hasPath }}" hint-placeholder-val="{{ false }}">
+                        <div class="sb-path">
+                          <div class="sb-bar"><i></i><i></i><i></i><span>服务中心后台</span></div>
+                          <ol>
+                            <sc-for list="{{ b.path }}" as="pt" hint-placeholder-count="2">
+                              <li style="{{ pt.style }}"><span style="{{ pt.numStyle }}">{{ pt.n }}</span><span>{{ pt.t }}</span></li>
+                            </sc-for>
+                          </ol>
+                          <div class="sb-cap">在后台依次点</div>
+                        </div>
+                      </sc-if>
                       <sc-for list="{{ b.shots }}" as="sh" hint-placeholder-count="2">
                         <figure class="lb-phone">
                           <div class="lb-frame">{{ sh.el }}</div>
@@ -1584,6 +1602,10 @@ class Component extends DCLogic {
         tips:(b.tips||[]).map(x=>{ const c=TIP[x.k]||TIP.tip; return { t:x.t, label:c[0],
           style:'display:flex;gap:10px;align-items:flex-start;padding:11px 14px;border-radius:12px;background:'+(x.k==='staff'?'var(--paper-2)':c[2])+';border:1px solid '+(x.k==='staff'?'var(--line)':c[3])+';',
           badgeStyle:'flex:0 0 auto;padding:1px 9px;border-radius:999px;font-size:12px;font-weight:700;line-height:1.7;white-space:nowrap;color:'+(x.k==='staff'?'#fafaf9':c[1])+';background:'+(x.k==='staff'?'var(--ink)':'var(--card)')+';' }; }),
+        hasPath:!!(b.path&&b.path.length), screenStyle:((b.path&&b.path.length)||(b.shots&&b.shots.length))?'':'grid-template-columns:1fr;',
+        path:(b.path||[]).map((t,i,a)=>{ const last=i===a.length-1; return { t, n:String(i+1),
+          style:'display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:9px;font-size:13.5px;line-height:1.4;'+(last?'background:var(--gold);color:#1c1917;font-weight:700;':'background:var(--paper-2);color:var(--ink);')+'margin-left:'+Math.min(i,3)*10+'px;',
+          numStyle:'flex:0 0 auto;width:20px;height:20px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-family:var(--latin);font-size:11.5px;font-weight:700;'+(last?'background:#1c1917;color:#e7d3a3;':'background:var(--card);color:var(--ink-soft);border:1px solid var(--line);') }; }),
         shots:(b.shots||[]).map(x=>({ cap:x.cap||'',
           el:React.createElement('a',{ href:x.src, target:'_blank', rel:'noopener', title:'点开看大图', style:{display:'block'} },
             React.createElement('img',{ src:x.src, alt:x.alt||x.cap||'', loading:'lazy', style:{display:'block',width:'100%',height:'auto'} })) })) });
