@@ -1,4 +1,5 @@
 // 数易助手后端：POST /api/ask  { question, history? } → { answer, askBack, reply, sources }
+// 要带 Authorization: Bearer <云端登入凭证>，只有海外客服（os）和老板（boss）可以问。
 // 只根据客服手册（content/ 生成的 handbook.mjs）回答。API Key 放在 Netlify 环境变量 ANTHROPIC_API_KEY。
 import Anthropic from '@anthropic-ai/sdk';
 import { HANDBOOK, SECTIONS } from './handbook.mjs';
@@ -9,6 +10,11 @@ const env = (k) => globalThis.Netlify?.env.get(k) ?? process.env[k];
 const MODEL = env('ASSISTANT_MODEL') || 'claude-opus-5-5';
 const EFFORT = env('ASSISTANT_EFFORT') || 'low';
 const ALLOWED_ORIGINS = (env('ALLOWED_ORIGINS') || 'https://seet0624.github.io').split(',').map((s) => s.trim()).filter(Boolean);
+// 只回答登入了的海外客服和老板：用「数易 · 知行堂」的云端登入凭证（Supabase）核对身份。
+// 这两个值是公开的（网页里本来就有），换项目时才改 Netlify 环境变量。
+const SUPABASE_URL = env('SUPABASE_URL') || 'https://xmtljgxdzhrptsazklls.supabase.co';
+const SUPABASE_KEY = env('SUPABASE_PUBLISHABLE_KEY') || 'sb_publishable_Z9It450THGdFoj_FItrJOQ_HcWYA0lJ';
+const ALLOWED_ROLES = ['os', 'boss'];
 
 const MAX_QUESTION = 500;
 const MAX_HISTORY = 8;
@@ -79,7 +85,7 @@ function corsHeaders(origin) {
   if (origin && ALLOWED_ORIGINS.includes(origin)) {
     h['Access-Control-Allow-Origin'] = origin;
     h['Access-Control-Allow-Methods'] = 'POST, OPTIONS';
-    h['Access-Control-Allow-Headers'] = 'Content-Type';
+    h['Access-Control-Allow-Headers'] = 'Content-Type, Authorization';
     h['Access-Control-Max-Age'] = '86400';
   }
   return h;
@@ -131,6 +137,21 @@ export async function answer(question, history = []) {
   };
 }
 
+// 凭证有效、身份是海外客服或老板才回 true；连不上 Supabase 时当作不通过（宁可不答，不把手册给错的人）
+async function allowed(req) {
+  const auth = req.headers.get('authorization') || '';
+  if (!/^Bearer \S+$/.test(auth)) return false;
+  try {
+    const r = await fetch(SUPABASE_URL + '/auth/v1/user', { headers: { apikey: SUPABASE_KEY, Authorization: auth } });
+    if (!r.ok) return false;
+    const u = await r.json();
+    return ALLOWED_ROLES.includes(u?.app_metadata?.role);
+  } catch (e) {
+    console.error('核对登入失败:', e);
+    return false;
+  }
+}
+
 export default async (req, context) => {
   const origin = req.headers.get('origin') || '';
   const cors = corsHeaders(origin);
@@ -138,6 +159,7 @@ export default async (req, context) => {
   if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
   if (req.method !== 'POST') return json({ error: '只接受 POST' }, 405, cors);
   if (!cors['Access-Control-Allow-Origin']) return json({ error: '来源网站不在允许名单' }, 403, cors);
+  if (!(await allowed(req))) return json({ error: '要用海外客服账号登入「数易 · 知行堂」才能问助手' }, 401, cors);
   if (!env('ANTHROPIC_API_KEY')) return json({ error: '助手还没设置 API Key' }, 503, cors);
 
   let body;
