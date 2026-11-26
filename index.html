@@ -35,8 +35,8 @@
  "flag_il": "assets/img/flags/il.png",
  "flag_ch": "assets/img/flags/ch.png",
  "flag_sa": "assets/img/flags/sa.png",
- "./%E6%94%B9%E7%BA%BF%E5%88%A4%E5%AE%9A%E5%99%A8.dc.html": "改线判定器.dc.html?v=20261021a",
- "./%E6%9C%8D%E5%8A%A1%E4%B8%AD%E5%BF%83%E5%88%A4%E5%AE%9A%E5%99%A8.dc.html": "服务中心判定器.dc.html?v=20261021a",
+ "./%E6%94%B9%E7%BA%BF%E5%88%A4%E5%AE%9A%E5%99%A8.dc.html": "改线判定器.dc.html?v=20261126a",
+ "./%E6%9C%8D%E5%8A%A1%E4%B8%AD%E5%BF%83%E5%88%A4%E5%AE%9A%E5%99%A8.dc.html": "服务中心判定器.dc.html?v=20261126a",
  "https://unpkg.com/react@18.3.1/umd/react.production.min.js": "assets/vendor/react.production.min.js",
  "https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js": "assets/vendor/react-dom.production.min.js"
 };</script>
@@ -53,9 +53,9 @@ window.addEventListener('error', function (e) {
   window.__csErrors.push(e.lineno ? file + ' 第 ' + e.lineno + ' 行：' + e.message : file + ' 没有加载成功');
 }, true);
 </script>
-<script src="content/首页.js?v=20261021a"></script>
-<script src="content/章节.js?v=20261021a"></script>
-<script src="content/汇率与工期.js?v=20261021a"></script>
+<script src="content/首页.js?v=20261126a"></script>
+<script src="content/章节.js?v=20261126a"></script>
+<script src="content/汇率与工期.js?v=20261126a"></script>
 <script>
 (function () {
   var need = { announcements: '首页', quicklinks: '首页', tasks: '首页', week: '首页',
@@ -1268,8 +1268,8 @@ class Component extends DCLogic {
   // 有后端（window.ASSISTANT_ENDPOINT）时由 Claude 根据手册回答；没有或连不上时用下面的关键词库
   KB = [
     { k:['清零','邀约','安置','改线','换线','upline','placement','业绩','RM600','申请表'], src:['rl-apply','rl-rule'],
-      a:'改邀约人（包括改团队、归还原邀约人）：服务中心后台已不能申请，由学员本人填写《更换邀约人业务申请表》，用登记邮箱发到 csshuyi5796@gmail.com。\n每宗手续费 RM600，获批后学员本人缴付；业绩及级别一律清零，无法恢复。\n未满申请期限（只有上课记录满 6 个月／有工具记录满 1 年）的，要原邀约人同意并在申请表签名。\n只改安置人：清零，不论有没有业绩都要报价。\n例外：归还原邀约人未满半年，免费、不清零、无需同意。',
-      reply:'您好，更换邀约人需要由您本人填写申请表并签名，再用您在公司登记的邮箱发送到 csshuyi5796@gmail.com。每宗手续费 RM600，获批后才缴付；更换后您本人的业绩及级别会清零，无法恢复。' },
+      a:'改邀约人（包括改团队、归还原邀约人）：服务中心后台已不能申请，由学员本人填写《更换邀约人业务申请表》，用登记邮箱发到 csshuyi5796@gmail.com。\n每宗手续费 RM600，获批后学员本人缴付；业绩及级别一律清零，无法恢复。\n未满申请期限（只有上课记录满 6 个月／有工具记录满 1 年）的，要原邀约人同意并在申请表签名。\n只改安置人：清零，不论有没有业绩都要报价。\n例外：归还原邀约人未满半年，免费、不清零、无需同意；只改邀约人、没动安置人，而且学员没买过工具，不收 RM600。',
+      reply:'您好，更换邀约人需要由您本人填写申请表并签名，再用您在公司登记的邮箱发送到 csshuyi5796@gmail.com。每宗手续费 RM600，获批后才缴付（只改邀约人、没有更改安置人，而且还没购买工具的，不收这笔费用）；更换后您本人的业绩及级别会清零，无法恢复。' },
     { k:['工期','多久','名正言顺','戒指','手表','吊坠','手链','几天','交付','什么时候到','几时','拿到'], src:['os-leadtime'],
       a:'制作出货的工期按工具不同：\n名正言顺 30 个工作日；吊坠、手链 50；戒指 60；手表 50–60。\n另加排单确认和寄送时间。跟学员只说区间，不要承诺具体哪一天。',
       reply:'您好，名正言顺制作大约 30 个工作日，加上排单和寄送时间，我们会在出货后第一时间通知您。工作日不含周末和公假。' },
