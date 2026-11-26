@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div style="border-radius:10px;border:1px solid var(--line);background:var(--card);max-width:760px;">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));border-bottom:1px solid var(--line);">
+    <label style="display:block;padding:14px 18px;border-right:1px solid var(--line);">
+      <span style="display:block;font-family:var(--serif);font-weight:700;font-size:12px;color:var(--gold-deep);letter-spacing:.08em;margin-bottom:6px;">币别</span>
+      <select value="{{ curCode }}" onChange="{{ onCur }}" style="width:100%;padding:8px 10px;font-size:14px;font-family:inherit;color:var(--ink);background:var(--card);border-radius:10px;border:1px solid var(--line);border-radius:0;cursor:pointer;">
+        <sc-for list="{{ curOpts }}" as="c" hint-placeholder-count="1"><option value="{{ c.c }}">{{ c.label }}</option></sc-for>
+      </select>
+    </label>
+    <label style="display:block;padding:14px 18px;border-right:1px solid var(--line);">
+      <span style="display:block;font-family:var(--serif);font-weight:700;font-size:12px;color:var(--gold-deep);letter-spacing:.08em;margin-bottom:6px;">加入工具</span>
+      <select value="" onChange="{{ onAdd }}" style="width:100%;padding:8px 10px;font-size:14px;font-family:inherit;color:var(--ink);background:var(--card);border-radius:10px;border:1px solid var(--line);border-radius:0;cursor:pointer;">
+        <option value="">选择工具…</option>
+        <sc-for list="{{ groups }}" as="g" hint-placeholder-count="1">
+          <optgroup label="{{ g.label }}">
+            <sc-for list="{{ g.opts }}" as="o" hint-placeholder-count="1"><option value="{{ o.v }}">{{ o.label }}</option></sc-for>
+          </optgroup>
+        </sc-for>
+      </select>
+    </label>
+    <label style="display:block;padding:14px 18px;">
+      <span style="display:block;font-family:var(--serif);font-weight:700;font-size:12px;color:var(--gold-deep);letter-spacing:.08em;margin-bottom:6px;">或直接输入总额</span>
+      <input value="{{ manual }}" onChange="{{ onManual }}" inputMode="decimal" placeholder="如换购价" style="width:100%;box-sizing:border-box;padding:8px 10px;font-size:14px;font-family:var(--latin);color:var(--ink);background:var(--card);border-radius:10px;border:1px solid var(--line);border-radius:0;"></input>
+    </label>
+  </div>
+
+  <div style="border-bottom:1px solid var(--line);overflow-x:auto;">
+    <sc-if value="{{ manualOn }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:16px 18px;">
+        <span style="font-size:14px;color:var(--ink);">按手动总额计算，已选工具不计入。</span>
+        <span style="display:flex;align-items:center;gap:8px;margin-left:auto;">
+          <span style="font-size:12px;color:var(--ink-faint);">补 PV 比例</span>
+          <span style="display:inline-flex;border-radius:10px;border:1px solid var(--ink);">
+            <button onClick="{{ setM50 }}" style="{{ m50Style }}">50%</button>
+            <button onClick="{{ setM30 }}" style="{{ m30Style }}">30%</button>
+          </span>
+        </span>
+      </div>
+    </sc-if>
+    <sc-if value="{{ showSel }}" hint-placeholder-val="{{ true }}">
+      <div style="min-width:560px;">
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) 92px 96px 104px 110px 40px;gap:0 12px;align-items:center;padding:10px 18px;border-bottom:1px solid var(--line);font-size:11.5px;letter-spacing:.06em;color:var(--ink-faint);">
+          <span>已选工具</span><span>补 PV 比例</span><span style="text-align:right;">单价</span><span style="text-align:center;">数量</span><span style="text-align:right;">小计</span><span></span>
+        </div>
+        <sc-for list="{{ selRows }}" as="r" hint-placeholder-count="1">
+          <div style="display:grid;grid-template-columns:minmax(0,1fr) 92px 96px 104px 110px 40px;gap:0 12px;align-items:center;padding:12px 18px;border-bottom:1px solid var(--line);">
+            <span style="font-size:14.5px;font-weight:500;color:var(--ink);line-height:1.4;">{{ r.n }}</span>
+            <span><span style="{{ r.rtStyle }}">{{ r.rt }}</span></span>
+            <span style="text-align:right;font-family:var(--latin);font-size:15px;color:var(--ink);">{{ r.unit }}</span>
+            <span style="display:flex;justify-content:center;">
+              <span style="display:inline-grid;grid-template-columns:30px 34px 30px;height:30px;border-radius:10px;border:1px solid var(--line);background:var(--card);">
+                <button onClick="{{ r.dec }}" aria-label="减少" style="border:0;background:transparent;color:var(--ink);cursor:pointer;font-size:15px;font-family:inherit;" style-hover="background:var(--card-2);">−</button>
+                <span style="display:flex;align-items:center;justify-content:center;border-left:1px solid var(--line);border-right:1px solid var(--line);font-family:var(--latin);font-weight:700;font-size:14px;color:var(--ink);">{{ r.qty }}</span>
+                <button onClick="{{ r.inc }}" aria-label="增加" style="border:0;background:transparent;color:var(--ink);cursor:pointer;font-size:15px;font-family:inherit;" style-hover="background:var(--card-2);">+</button>
+              </span>
+            </span>
+            <span style="text-align:right;font-family:var(--latin);font-weight:700;font-size:17px;color:var(--ink);">{{ r.amt }}</span>
+            <button onClick="{{ r.rm }}" aria-label="移除" title="移除" style="width:30px;height:30px;justify-self:end;border:1px solid transparent;background:transparent;color:var(--ink-faint);cursor:pointer;display:flex;align-items:center;justify-content:center;" style-hover="border-color:var(--line);color:var(--ink);">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path></svg>
+            </button>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+    <sc-if value="{{ noneSel }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:18px;font-size:13.5px;color:var(--ink-faint);">从上方「加入工具」选一件，或直接输入总额。</div>
+    </sc-if>
+    <div style="display:flex;justify-content:flex-end;align-items:baseline;gap:14px;padding:12px 18px;background:var(--card-2);">
+      <span style="font-size:12px;letter-spacing:.06em;color:var(--ink-faint);">工具合计 · {{ curCode }}</span>
+      <span style="font-family:var(--latin);font-weight:700;font-size:22px;color:var(--ink);">{{ totalTxt }}</span>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr));border-bottom:1px solid var(--line);">
+    <sc-for list="{{ tierCards }}" as="t" hint-placeholder-count="3">
+      <div style="{{ t.style }}">
+        <div style="display:flex;justify-content:space-between;gap:8px;"><span style="{{ t.kStyle }}">{{ t.range }}</span><span style="{{ t.kStyle }}">{{ t.mark }}</span></div>
+        <div style="font-family:var(--serif);font-weight:900;font-size:22px;line-height:1.2;">{{ t.title }}</div>
+        <div style="font-size:12px;line-height:1.5;opacity:.8;">{{ t.sub }}</div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="padding:22px 18px 18px;background:var(--card-2);">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:14px;">
+      <span style="font-family:var(--serif);font-weight:700;font-size:12px;color:var(--gold-deep);letter-spacing:.12em;">补 PV 计算 · {{ curCode }}</span>
+      <span style="font-size:11.5px;color:var(--ink-faint);">{{ rateNote }}</span>
+    </div>
+    <sc-if value="{{ hasTier }}" hint-placeholder-val="{{ true }}">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,120px),1fr));gap:1px;background:var(--line);border-radius:10px;border:1px solid var(--line);">
+        <div style="background:var(--card);padding:12px 14px;"><div style="font-size:11.5px;color:var(--ink-faint);margin-bottom:4px;">工具总额</div><div style="font-family:var(--latin);font-weight:700;font-size:18px;color:var(--ink);">{{ fTotal }}</div></div>
+        <div style="background:var(--card);padding:12px 14px;"><div style="font-size:11.5px;color:var(--ink-faint);margin-bottom:4px;">− 服务中心</div><div style="font-family:var(--latin);font-weight:700;font-size:18px;color:var(--ink);">{{ tierPrice }}</div></div>
+        <div style="background:var(--card);padding:12px 14px;"><div style="font-size:11.5px;color:var(--ink-faint);margin-bottom:4px;">＝ 差额</div><div style="font-family:var(--latin);font-weight:700;font-size:18px;color:var(--ink);">{{ fDiff }}</div></div>
+        <sc-if value="{{ showRate }}" hint-placeholder-val="{{ true }}">
+          <div style="background:var(--card);padding:12px 14px;"><div style="font-size:11.5px;color:var(--ink-faint);margin-bottom:4px;">÷ {{ fRate }}（固定汇率）→ 美金</div><div style="font-family:var(--latin);font-weight:700;font-size:18px;color:var(--ink);">{{ fUsd }}</div></div>
+        </sc-if>
+      </div>
+      <div style="margin-top:12px;border-radius:10px;border:1px solid var(--line);background:var(--card);">
+        <sc-for list="{{ groups2 }}" as="g" hint-placeholder-count="1">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,130px),1fr));gap:4px 14px;align-items:baseline;padding:12px 14px;border-bottom:1px solid var(--line);">
+            <div>
+              <div style="font-size:13.5px;font-weight:700;color:var(--ink);">{{ g.label }}</div>
+              <div style="font-size:11.5px;color:var(--ink-faint);margin-top:2px;">{{ g.names }}</div>
+            </div>
+            <div style="font-size:12px;color:var(--ink-faint);">补差价 <b style="font-family:var(--latin);font-size:16px;color:var(--ink);">{{ g.usd }}</b> USD</div>
+            <div style="font-size:12px;color:var(--ink-faint);">{{ g.op }} ＝ <b style="font-family:var(--latin);font-size:18px;color:var(--ink);">{{ g.pv }}</b> PV</div>
+          </div>
+        </sc-for>
+        <div style="background:var(--ink);border-radius:var(--r,14px);padding:14px;display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;">
+          <span style="font-size:12px;color:var(--gold-lt);letter-spacing:.06em;">合计补 PV（美金）</span>
+          <span style="font-family:var(--latin);font-weight:700;font-size:28px;color:#fff;">{{ fPv }}</span>
+        </div>
+      </div>
+    </sc-if>
+    <sc-if value="{{ noTier }}" hint-placeholder-val="{{ false }}">
+      <div style="background:var(--card);border-radius:10px;border:1px solid var(--line);padding:14px 16px;font-size:15px;line-height:1.7;color:var(--ink);">{{ vNoTier }}</div>
+    </sc-if>
+
+    <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;">
+      <span style="font-size:13px;line-height:1.6;color:var(--ink);flex:1;min-width:220px;">{{ vReason }}</span>
+      <sc-if value="{{ hasTier }}" hint-placeholder-val="{{ true }}">
+        <button onClick="{{ onCopy }}" style="{{ copyStyle }}">{{ copyLabel }}</button>
+      </sc-if>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:800,&quot;height&quot;:620}}">
+class Component extends DCLogic {
+  state = { cur:'MYR', sel:{}, manual:'', copied:false, mRatio:0.5 };
+  D0 = {"cur":[{"c":"MYR","n":"马来西亚","r":4.5},{"c":"USD","n":"美国","r":1},{"c":"SGD","n":"新加坡","r":1.5},{"c":"CNY","n":"中国","r":7},{"c":"VND","n":"越南","r":25000},{"c":"HKD","n":"香港","r":7.9},{"c":"IDR","n":"印尼","r":16500},{"c":"TWD","n":"台湾","r":32},{"c":"BND","n":"文莱","r":1.5},{"c":"AUD","n":"澳洲","r":1.61},{"c":"KHR","n":"柬埔寨","r":4150},{"c":"PHP","n":"菲律宾","r":60},{"c":"THB","n":"泰国","r":38.5},{"c":"MMK","n":"缅甸","r":4333.5},{"c":"CAD","n":"加拿大","r":1.44},{"c":"EUR","n":"欧盟","r":1.1},{"c":"KRW","n":"韩国","r":1600},{"c":"GBP","n":"英国","r":0.92},{"c":"NPR","n":"尼泊尔","r":133},{"c":"NZD","n":"新西兰","r":1.8},{"c":"AED","n":"阿拉伯联合酋长国","r":3.7},{"c":"INR","n":"印度","r":83},{"c":"MXN","n":"墨西哥","r":25},{"c":"JPY","n":"日本","r":150},{"c":"SEK","n":"瑞典","r":11.31},{"c":"XOF","n":"科特迪瓦共和国","r":687},{"c":"BTN","n":"不丹努尔特鲁姆","r":83.35},{"c":"BAM","n":"波斯尼亚","r":2.1},{"c":"ILS","n":"以色列","r":4.1},{"c":"CHF","n":"瑞士","r":1},{"c":"SAR","n":"沙特阿拉伯","r":3.8}],"cats":["手链","命名","吊坠","手表","戒指","耳环","平衡牌"],"tools":[{"c":"手链","n":"数字幸福手链","pv":145,"p":[1035,230,345,1969,5750000,1817,3795000,7728,345,370.3,954500,13800,8855,996705,331,253,368000,211,30590,414,851,19090,5750,34500,2601,158010,19171,483,943,230,874]},{"c":"手链","n":"若熙手链","pv":100,"p":[1305,290,435,2530,7250000,2291,4785000,9744,435,466.9,1203500,17400,11165,1256715,417,319,464000,266,38570,522,1073,24070,7250,43500,3279,199230,24172,609,1189,290,1102]},{"c":"命名","n":"名正言顺命名","pv":715,"p":[4410,980,1470,8360,24500000,7742,16170000,32928,1470,1577.8,4067000,58800,37730,4246830,1411,1078,1568000,901,130340,1764,3626,81340,24500,147000,11083,673260,81683,2058,4018,980,3724]},{"c":"命名","n":"企业名正言顺","pv":2860,"p":[25110,5580,8370,47300,139500000,44082,92070000,187488,8370,8983.8,23157000,334800,214830,24180930,8035,6138,8928000,5134,742140,10044,20646,463140,139500,837000,63110,3833460,465093,11718,22878,5580,21204]},{"c":"吊坠","n":"乾坤圆满吊坠","pv":450,"p":[3105,690,1035,5940,17250000,5451,11385000,23184,1035,1110.9,2863500,41400,26565,2990115,806,759,1104000,635,91770,1242,2553,57270,17250,103500,7804,474030,57512,1449,2829,690,2622]},{"c":"吊坠","n":"开运吊坠","pv":990,"p":[11295,2510,3765,21340,62750000,19829,41415000,84336,3765,4041,10416500,150600,96635,10877085,3614,2761,4016000,2309,333830,4518,9287,208330,62750,376500,28388,1724370,209209,5271,10291,2510,9538]},{"c":"吊坠","n":"开蒙吊坠","pv":1490,"p":[13410,2980,4470,25410,74500000,23542,49170000,100128,4470,4798,12367000,178800,114730,12913830,4291,3278,4768000,2742,396340,5364,11026,247340,74500,447000,33704,2047260,248383,6258,12218,2980,11324]},{"c":"吊坠","n":"十二生肖吊坠","pv":1640,"p":[14445,3210,4815,27610,80250000,25359,52965000,107856,4815,5168,13321500,192600,123585,13910535,4622,3531,5136000,2953,426930,5778,11877,266430,80250,481500,36305,2205270,267554,6741,13161,3210,12198]},{"c":"吊坠","n":"开萃吊坠","pv":2100,"p":[18855,4190,6285,37290,104750000,33101,69135000,140784,6285,6745.9,17388500,251400,161315,18157365,4161.6,4609,6704000,3855,557270,7542,15503,347770,104750,628500,47389,2878530,349237,8799,17179,4190,15922]},{"c":"吊坠","n":"开渐吊坠","pv":3390,"p":[27450,6100,9150,51700,152500000,48190,100650000,204960,9150,9821,25315000,366000,234850,26434350,6721,6710,9760000,5612,811300,10980,22570,506300,152500,915000,68991,4190700,508435,12810,25010,6100,23180]},{"c":"吊坠","n":"开合黄金吊坠","pv":8100,"p":[62550,13900,20850,118690,347500000,109810,229350000,467040,20850,22379,57685000,834000,535150,60235650,20016,15290,22240000,12788,1848700,25020,51430,1153700,347500,2085000,157209,9549300,1158565,29190,56990,13900,52820]},{"c":"吊坠","n":"开合白金吊坠","pv":8100,"p":[62550,13900,20850,118690,347500000,109810,229350000,467040,20850,22379,57685000,834000,535150,60235650,20016,15290,22240000,12788,1848700,25020,51430,1153700,347500,2085000,157209,9549300,1158565,29190,56990,13900,52820]},{"c":"吊坠","n":"开元吊坠","pv":7590,"p":[85050,18900,28350,162800,472500000,149310,311850000,635040,28350,30429,78435000,1134000,727650,81903150,20376,20790,30240000,17388,2513700,34020,69930,1568700,472500,2835000,213759,12984300,1575315,39690,77490,18900,71820]},{"c":"手表","n":"流年鸿运手表（男款/女款）","pv":290,"p":[2520,560,840,4851,14000000,4424,9240000,18816,840,901.6,2324000,33600,21560,2426760,806,616,896000,515,74480,1008,2072,46480,14000,84000,6333,384720,46676,1176,2296,560,2128]},{"c":"手表","n":"瑞驻手表（男款/女款）","pv":1430,"p":[9675,2150,3225,18590,53750000,16985,35475000,72240,3225,3461.5,8922500,129000,82775,9317025,3096,2365,3440000,1978,285950,3870,7955,178450,53750,322500,24316,1477050,179203,4515,8815,2150,8170]},{"c":"手表","n":"瑞启手表（男款）","pv":2860,"p":[16470,3660,5490,31570,91500000,28914,60390000,122976,5490,5892.6,15189000,219600,140910,15860610,5270,4026,5856000,3367,486780,6588,13542,303780,91500,549000,41394,2514420,305061,7686,15006,3660,13908]},{"c":"手表","n":"天星手表（女款）","pv":2860,"p":[18360,4080,6120,34980,102000000,32232,67320000,137088,6120,6568.8,16932000,244800,157080,17680680,5875,4488,6528000,3753,542640,7344,15096,338640,102000,612000,46144,2802960,340068,8568,16728,4080,15504]},{"c":"手表","n":"天智手表（男款）","pv":3575,"p":[22500,5000,7500,42350,125000000,39500,82500000,168000,7500,8050,20750000,300000,192500,21667500,7200,5500,8000000,4600,665000,9000,18500,415000,125000,750000,56550,3435000,416750,10500,20500,5000,19000]},{"c":"手表","n":"天威手表（男款/女款）","pv":4290,"p":[28935,6430,9645,54670,160750000,50797,106095000,216048,9645,10352.3,26684500,385800,247555,27864405,9259,7073,10288000,5915,855190,11574,23791,533690,160750,964500,72723,4417410,535941,13503,26363,6430,24434]},{"c":"手表","n":"天富手表（男款）","pv":6429,"p":[39861,8858,13287,59290,221450000,69978,146157000,297628.8,13287,14261.38,36760700,531480,341033,38386143,12755,9743,14172800,8149,1178114,15944,32774,735214,221450,1328700,100183,6085446,738314,18602,36318,8858,33660]},{"c":"手表","n":"天富手表（女款）","pv":5000,"p":[31500,7000,10500,75790,175000000,55300,115500000,235200,10500,11270,29050000,420000,269500,30334500,10080,7700,11200000,6440,931000,12600,25900,581000,175000,1050000,79170,4809000,583450,14700,28700,7000,26600]},{"c":"手表","n":"天希手表","pv":7630,"p":[49050,10900,16350,92323,272500000,86110,179850000,366240,16350,17549,45235000,654000,419650,47235150,15696,11990,17440000,10028,1449700,19620,40330,904700,272500,1635000,123279,7488300,908515,22890,44690,10900,41420]},{"c":"手表","n":"天解手表","pv":4445,"p":[67000,14889,22333,119900,372225000,117623,245668500,500270,22333,23971,61789350,893340,573227,64521482,21440,16377,23822400,13697,1980237,26800,55089,1235787,372225,2233350,168394,10228743,1240998,31267,61045,14889,56578]},{"c":"手表","n":"天祥手表（男款/女款）","pv":10100,"p":[71550,15900,23850,134673,397500000,125610,262350000,534240,23850,25599,65985000,954000,612150,68902650,22896,17490,25440000,14628,2114700,28620,58830,1319700,397500,2385000,179829,10923300,1325265,33390,65190,15900,60420]},{"c":"手表","n":"天升手表（男款/女款）","pv":12540,"p":[82935,18430,27645,157410,460750000,145597,304095000,619248,27645,29672,76484500,1105800,709555,79866405,26539,20273,29488000,16956,2451190,33174,68191,1529690,460750,2764500,208443,12661410,1536141,38703,75563,18430,70034]},{"c":"手表","n":"天观手表（男款/女款）","pv":14060,"p":[95805,21290,31935,180510,532250000,168191,351285000,715344,31935,34277,88353500,1277400,819665,92260215,30658,23419,34064000,19587,2831570,38322,78773,1767070,532250,3193500,240790,14626230,1774522,44709,87289,21290,80902]},{"c":"手表","n":"天晋手表（男款/女款）","pv":15700,"p":[108675,24150,36225,205590,603750000,190785,398475000,811440,36225,38882,100222500,1449000,929775,104654025,34776,26565,38640000,22218,3211950,43470,89355,2004450,603750,3622500,273137,16591050,2012903,50715,99015,24150,91770]},{"c":"手表","n":"天泽手表（男款/女款）","pv":14000,"p":[139000,31333.34,47000,240900,772225000,244023,509668500,1037870.4,46334,50447,128189350,1853340,1189227,135783029,45120,33978,50133344,28418,4108237,55600,114289,2563787,772225,4633350,349355,21220743,2574598,64867,126645,30889,117378]},{"c":"手表","n":"天恒手表（男款/女款）","pv":14000,"p":[139000,31333.34,47000,240900,772225000,244023,509668500,1037870.4,46334,50447,128189350,1853340,1189227,135783029,45120,33978,50133344,28418,4108237,55600,114289,2563787,772225,4633350,349355,21220743,2574598,64867,126645,30889,117378]},{"c":"手表","n":"天润手表（男款/女款）","pv":23000,"p":[147861,32858,49287,279510,821450000,259579,542157000,1104028.8,49287,52902,136360700,1971480,1265033,142390143,47316,36144,52572800,30230,4370114,59145,121575,2727214,821450,4928700,371624,22573446,2738714,69002,134718,32858,124860]},{"c":"手表","n":"天益手表（男款/女款）","pv":21429,"p":[173610,38580,57870,327690,964500000,304782,636570000,1296288,57870,62113.8,160107000,2314800,1485330,167186430,55555,42438,61728000,35493,5131140,69444,142746,3202140,964500,5787000,436339,26504460,3215643,81018,158178,38580,146604]},{"c":"手表","n":"天尊手表（男款/女款）","pv":28575,"p":[315000,70000,105000,592900,1750000000,553000,1155000000,2352000,105000,112700,290500000,4200000,2695000,303345000,100800,77000,112000000,64400,9310000,126000,259000,5810000,1750000,10500000,791700,48090000,5834500,147000,287000,70000,266000]},{"c":"手表","n":"天耀手表","pv":26350,"p":[323550,71900,107850,608993,1797500000,568010,1186350000,2415840,107850,115759,298385000,4314000,2768150,311578650,103536,79090,115040000,66148,9562700,129420,266030,5967700,1797500,10785000,813189,49395300,5992865,150990,294790,71900,273220]},{"c":"戒指","n":"开乾戒指","pv":2860,"p":[23805,5290,7935,45100,132250000,41791,87285000,177744,7935,8517,21953500,317400,203665,22924215,7618,5819,8464000,4867,703570,9522,19573,439070,132250,793500,59830,3634230,440922,11109,21689,5290,20102]},{"c":"戒指","n":"开恒戒指","pv":3400,"p":[31500,7000,10500,59290,175000000,55300,115500000,235200,10500,11270,29050000,420000,269500,30334500,10080,7700,11200000,6440,931000,12600,25900,581000,175000,1050000,79170,4809000,583450,14700,28700,7000,26600]},{"c":"戒指","n":"幸福戒指","pv":5715,"p":[39870,8860,13290,62020,221500000,69994,146190000,297696,13290,14264.6,36769000,531600,341110,38394810,12758,9746,14176000,8151,1178380,15948,32782,735380,221500,1329000,100206,6086820,738481,18606,36326,8860,33668]},{"c":"戒指","n":"开豫戒指","pv":6143,"p":[44361,9858,14787,83710,246450000,77878,162657000,331228.8,14787,15871.38,40910700,591480,379533,42719643,14195,10843,15772800,9069,1311114,17744,36474,818214,246450,1478700,111493,6772446,821664,20702,40418,9858,37460]},{"c":"戒指","n":"开谦戒指","pv":6770,"p":[50787,11286,16929,95810,282150000,89159,186219000,379209.6,16929,18170.46,46836900,677160,434511,48907881,16251,12414,18057600,10383,1501038,20314.8,41758,936738,282150,1692900,127644,7753482,940688,23701,46273,11286,42887]},{"c":"戒指","n":"福运戒指","pv":4445,"p":[67000,14889,22333,119900,372225000,117623,245668500,500270.4,22333,23971,61789350,893340,573226.5,64521482,21440,16377,23822400,13697,1980237,26800,55089,1235787,372225,2233350,168394,10228743,1240998,31267,61045,14889,56578]},{"c":"戒指","n":"皇冠戒指","pv":10000,"p":[83610,18580,27870,158290,464500000,146782,306570000,624288,27870,29913.8,77107000,1114800,715330,80516430,26755,20438,29728000,17093,2471140,33444,68746,1542140,464500,2787000,210139,12764460,1548643,39018,76178,18580,70604]},{"c":"戒指","n":"开颐戒指","pv":17143,"p":[127930,28429,42643,240900,710725000,224589,469078500,955214.4,42643,45770.69,117980350,1705740,1094516.5,123197072,40937,31271,45486400,26154,3781057,51172,105187,2359607,710725,4264350,321531,19530723,2369557,59701,116559,28429,108030]},{"c":"戒指","n":"心愿戒指","pv":25715,"p":[173610,38580,57870,327800,964500000,304782,636570000,1296288,57870,62113.8,160107000,2314800,1485330,167186430,55555,42438,61728000,35493,5131140,69444,142746,3202140,964500,5787000,436339,26504460,3215643,81018,158178,38580,146604]},{"c":"戒指","n":"开丰戒指","pv":31293,"p":[230850,51300,76950,435270,1282500000,405270,846450000,1723680,76950,82593,212895000,3078000,1975050,222308550,73872,56430,82080000,47196,6822900,92340,189810,4257900,1282500,7695000,580203,35243100,4275855,107730,210330,51300,194940]},{"c":"戒指","n":"开泰戒指","pv":31600,"p":[355500,79000,118500,669130,1975000000,624100,1303500000,2654400,118500,127190,327850000,4740000,3041500,342346500,113760,86900,126400000,72680,10507000,142200,292300,6557000,1975000,11850000,893490,54273000,6584650,165900,323900,79000,300200]},{"c":"耳环","n":"同人耳环","pv":1610,"p":[13950,3100,4650,26257,77500000,24490,51150000,104160,4650,4991,12865000,186000,119350,13433850,4464,3410,4960000,2852,412300,5580,11470,257300,77500,465000,35061,2129700,258385,6510,12710,3100,11780]},{"c":"耳环","n":"同有耳环","pv":2100,"p":[18450,4100,6150,34727,102500000,32390,67650000,137760,6150,6601,17015000,246000,157850,17767350,5904,4510,6560000,3772,545300,7380,15170,340300,102500,615000,46371,2816700,341735,8610,16810,4100,15580]},{"c":"平衡牌","n":"165平衡牌","pv":360,"p":[2520,560,840,5060,14000000,4424,9240000,18816,840,901.6,2324000,33600,21560,2426760,806,616,896000,515,74480,1008,2072,46480,14000,84000,6333,384720,46676,1176,2296,560,2128]},{"c":"平衡牌","n":"57风水门牌","pv":360,"p":[2520,560,840,5060,14000000,4424,9240000,18816,840,901.6,2324000,33600,21560,2426760,806,616,896000,515,74480,1008,2072,46480,14000,84000,6333,384720,46676,1176,2296,560,2128]},{"c":"平衡牌","n":"96风水门牌","pv":360,"p":[2520,560,840,5060,14000000,4424,9240000,18816,840,901.6,2324000,33600,21560,2426760,806,616,896000,515,74480,1008,2072,46480,14000,84000,6333,384720,46676,1176,2296,560,2128]},{"c":"平衡牌","n":"寻龙撅","pv":715,"p":[4410,980,1470,8360,24500000,7742,16170000,32928,1470,1577.8,4067000,58800,37730,4246830,1411,1078,1568000,901,130340,1764,3626,81340,24500,147000,11083,673260,81683,2058,4018,980,3724]},{"c":"平衡牌","n":"63风水桌牌","pv":615,"p":[4410,980,1470,8360,24500000,7742,16170000,32928,1470,1577.8,4067000,58800,37730,4246830,1411,1078,1568000,901,130340,1764,3626,81340,24500,147000,11083,673260,81683,2058,4018,980,3724]},{"c":"平衡牌","n":"九合平衡牌","pv":1209,"p":[8370,1860,2790,16390,46500000,14694,30690000,62496,2790,2995,7719000,111600,71610,8060310,2678,2046,2976000,1711,247380,3348,6882,154380,46500,279000,21037,1277820,155031,3906,7626,1860,7068]}],"tiers":[{"label":"天解手表 / 福运戒指","pv":4445,"p":[67000,14889,22333,119900,372225000,117623,245668500,500270,22333,23971,61789350,893340,573227,64521482,21440,16377,23822400,13697,1980237,26800,55089,1235787,372225,2233350,168394,10228743,1240998,31267,61045,14889,56578],"na":[false,false,true,false,false,true,false,false,false,true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]},{"label":"天泽 / 天恒手表","pv":14000,"p":[139000,31333.34,47000,240900,772225000,244023,509668500,1037870.4,46334,50447,128189350,1853340,1189227,135783029,45120,33978,50133344,28418,4108237,55600,114289,2563787,772225,4633350,349355,21220743,2574598,64867,126645,30889,117378],"na":[false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]}]};
+  R30 = ['开泰','天耀','天尊','开元','开恒','开蒙','开运'];
+  ratioOf(t){ return this.R30.some(k=>t.n.indexOf(k)===0) ? 0.3 : 0.5; }
+  segBtn(on){ return 'padding:4px 10px;border:0;font-family:var(--latin);font-weight:700;font-size:12px;cursor:pointer;background:'+(on?'var(--ink)':'var(--card)')+';color:'+(on?'#fff':'var(--ink)')+';'; }
+
+  componentDidMount(){
+  }
+  componentWillUnmount(){ clearInterval(this._iv); clearTimeout(this._ct); }
+
+  r2(n){ return Math.round((n+Number.EPSILON)*100)/100; }
+  fmt(n){ if(!isFinite(n)) return '—'; const r=this.r2(n), d=Number.isInteger(r)?0:2;
+    return r.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d}); }
+  plain(n){ const r=this.r2(n); return Number.isInteger(r)?String(r):r.toFixed(2); }
+
+  setQty(i,q){ const sel=Object.assign({},this.state.sel); if(q<=0) delete sel[i]; else sel[i]=q; this.setState({ sel }); }
+
+  copy(text){
+    const done=()=>{ this.setState({copied:true}); clearTimeout(this._ct); this._ct=setTimeout(()=>this.setState({copied:false}),1600); };
+    const fb=()=>{ try{ const ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);}catch(e){} done(); };
+    try{ if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done,fb); else fb(); }catch(e){ fb(); }
+  }
+
+  renderVals(){
+    const S=this.state, D=this.D0;
+    if(!D) return { curOpts:[], groups:[], selRows:[], tierCards:[], hasTier:false, noTier:false, noneSel:false, showSel:false, manualOn:false };
+    const ci=Math.max(0,D.cur.findIndex(c=>c.c===S.cur)), cur=D.cur[ci], code=cur.c, rate=cur.r;
+    const unit=' （'+code+'）', isUSD=code==='USD';
+
+    const groups=D.cats.map(c=>({ label:c, opts:D.tools.map((t,i)=>({t,i})).filter(x=>x.t.c===c && x.t.p[ci]>0)
+      .map(x=>({ v:String(x.i), label:x.t.n+'　'+code+' '+this.fmt(x.t.p[ci]) })) })).filter(g=>g.opts.length);
+
+    const selRows=[]; let sum=0; const lines=[]; let items=[];
+    const rtStyle=r=>'display:inline-block;padding:3px 8px;font-size:12px;font-weight:700;letter-spacing:.04em;white-space:nowrap;'+(r===0.3?'background:var(--gold-deep);color:#fff;border-radius:10px;border:1px solid var(--gold-deep);':'background:transparent;color:var(--ink);border-radius:10px;border:1px solid var(--ink);');
+    Object.keys(S.sel).forEach(k=>{
+      const i=+k, t=D.tools[i], q=S.sel[k], p=t.p[ci]||0, ratio=this.ratioOf(t); sum+=p*q;
+      selRows.push({ n:t.n, qty:q, amt:this.fmt(p*q), amtCur:this.fmt(p*q)+unit, unit:this.fmt(p), rt:(ratio*100)+'% 规则', rtStyle:rtStyle(ratio),
+        inc:()=>this.setQty(i,q+1), dec:()=>this.setQty(i,q-1), rm:()=>this.setQty(i,0) });
+      const nm=t.n.replace(/（.*$/,'')+(q>1?' ×'+q:'');
+      lines.push(nm+' '+this.plain(p*q)+'（'+code+'）');
+      items.push({ n:nm, amt:p*q, ratio });
+    });
+    const mv=parseFloat(String(S.manual).replace(/,/g,''));
+    const manualOn=String(S.manual).trim()!=='' && isFinite(mv);
+    const total=manualOn?mv:sum;
+    if(manualOn){ lines.length=0; lines.push('工具总额 '+this.plain(total)+'（'+code+'）'); items=[{ n:'手动总额', amt:total, ratio:S.mRatio }]; }
+
+    const tiers=D.tiers.map(t=>({ label:t.label, pv:t.pv, price:t.p[ci], ok:t.p[ci]>0&&!t.na[ci] })).filter(t=>t.ok).sort((a,b)=>a.price-b.price);
+    let pick=null; tiers.forEach(t=>{ if(total>=t.price) pick=t; });
+    const naTier=D.tiers.filter(t=>t.na[ci]).map(t=>t.label);
+    const hasTier=!!pick && total>0;
+
+    const card=(on)=>'display:flex;flex-direction:column;gap:6px;padding:16px 18px;min-width:0;border-right:1px solid '+(on?'var(--ink)':'var(--line)')+';background:'+(on?'var(--ink)':'var(--card)')+';color:'+(on?'#fff':'var(--ink)')+';';
+    const kc=(on)=>'font-family:var(--latin);font-weight:700;font-size:11.5px;letter-spacing:.06em;color:'+(on?'var(--gold-lt)':'var(--gold-deep)')+';';
+    const tierCards=[];
+    if(tiers.length){
+      const off=!pick;
+      tierCards.push({ range:'未满 '+this.fmt(tiers[0].price), title:'不构成', sub:'不补 PV', style:card(off), kStyle:kc(off), mark:off?'当前':'' });
+      tiers.forEach((t,j)=>{ const on=pick===t, nx=tiers[j+1];
+        tierCards.push({ range: nx ? this.fmt(t.price)+' – '+this.fmt(nx.price)+' 以下' : this.fmt(t.price)+' 以上',
+          title:this.fmt(t.price)+' 档', sub:t.label+' · PV '+this.fmt(t.pv), style:card(on), kStyle:kc(on), mark:on?'当前':'' }); });
+    }
+
+    let vReason='', vNoTier='', fDiff='—', fUsd='—', fPv='—', copyText='', groups2=[];
+    if(!(total>0)){ vReason='选好工具或输入总额后自动判定。'; vNoTier='还没有金额可以判定。'; }
+    else if(!pick){
+      vReason='工具总额 '+this.fmt(total)+'，未达最低一档 '+(tiers[0]?this.fmt(tiers[0].price):'—')+'。';
+      vNoTier= tiers.length ? '未达服务中心门槛，还差 '+this.fmt(tiers[0].price-total)+unit+'。' : '此币别没有服务中心档位。';
+    } else {
+      const diff=total-pick.price, usd=diff/rate, hi=tiers.find(t=>t.price>pick.price);
+      const byR={};
+      items.forEach(it=>{ const g=byR[it.ratio]||(byR[it.ratio]={ ratio:it.ratio, amt:0, names:[] }); g.amt+=it.amt; g.names.push(it.n); });
+      const gl=Object.values(byR).sort((a,b)=>b.ratio-a.ratio);
+      const mixed=gl.length>1;
+      let pv=0; const cl=[];
+      groups2=gl.map(g=>{
+        const gd=diff*(g.amt/total), gu=gd/rate, gp=gu*g.ratio; pv+=gp;
+        const pct=(g.ratio*100)+'%', half=g.ratio===0.5;
+        const opC=half?'/2':'×'+pct;
+        const conv=isUSD ? this.plain(gd)+' '+opC : this.plain(gd)+'/'+rate+'（固定汇率） = '+this.plain(gu)+' '+opC;
+        cl.push((mixed?pct+' 工具（'+g.names.join('、')+'）':'')+'补 '+conv+' = '+this.plain(gp)+' PV（美金）');
+        return { label:pct+' PV 规则', names:g.names.join('、')+(mixed?' · 分摊差额 '+this.fmt(gd):''), usd:this.fmt(gu), op:half?'÷ 2':'× '+pct, pv:this.fmt(gp) };
+      });
+      vReason = (hi ? '总额 '+this.fmt(total)+' 没有超过 '+this.fmt(hi.price)+'，所以用 '+this.fmt(pick.price)+' 档。'
+                   : '总额 '+this.fmt(total)+' 已达最高一档，用 '+this.fmt(pick.price)+' 档。')
+                + (mixed ? ' 涉及不同比例，差额按各工具金额占比分摊后分别计算。' : '');
+      fDiff=this.fmt(diff); fUsd=this.fmt(usd); fPv=this.fmt(pv);
+      if(mixed) cl.push('合计补 '+this.plain(pv)+' PV（美金）');
+      copyText=['服务中心 '+this.plain(pick.price)+'（'+code+'）'].concat(lines).concat(cl).join('\n');
+    }
+
+    return {
+      curCode:code, curOpts:D.cur.map(c=>({ c:c.c, label:c.c+' · '+c.n })),
+      onCur:e=>this.setState({cur:e.target.value}),
+      onAdd:e=>{ const v=e.target.value; if(v==='') return; const i=+v; if(!this.state.sel[i]) this.setQty(i,1); },
+      showRate:!isUSD,
+      rateNote:'固定汇率 1 USD = '+rate+' '+code+(naTier.length?' · 此币别无「'+naTier.join('、')+'」档':''),
+      groups, selRows, showSel:!manualOn, noneSel:!manualOn && selRows.length===0,
+      manual:S.manual, manualOn, onManual:e=>this.setState({manual:e.target.value}),
+      totalAmt:this.fmt(total)+unit, totalTxt:this.fmt(total),
+      tierAmt: pick ? this.fmt(pick.price)+unit : '—', tierLabel: pick ? pick.label+' · PV '+this.fmt(pick.pv) : '未达门槛',
+      tierPrice: pick ? this.fmt(pick.price) : '—',
+      tierCards, hasTier, noTier:!hasTier, vReason, vNoTier,
+      fTotal:this.fmt(total), fRate:String(rate), fDiff, fUsd, fPv, groups2,
+      setM50:()=>this.setState({mRatio:0.5}), setM30:()=>this.setState({mRatio:0.3}),
+      m50Style:this.segBtn(S.mRatio===0.5), m30Style:this.segBtn(S.mRatio===0.3),
+      onCopy:()=>this.copy(copyText), copyLabel:S.copied?'已复制':'复制算式',
+      copyStyle:'padding:9px 16px;font-size:13px;font-family:inherit;cursor:pointer;border-radius:10px;border:1px solid var(--ink);background:'+(S.copied?'var(--ink)':'var(--card)')+';color:'+(S.copied?'#fff':'var(--ink)')+';'
+    };
+  }
+}
+</script>
+</body>
+</html>

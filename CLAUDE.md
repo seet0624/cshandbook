@@ -8,8 +8,8 @@
 
 1. 改 `content/` → commit、push 到 main（Netlify 部署后助手更新）。
 2. **同一次一起更新知行堂**：
-   - 判定器源码不放在公开仓库。要改判定器，先从云端现有内容取出来（或从 git 历史 `改线判定器.dc.html` / `服务中心判定器.dc.html` 取最后一版再套上之后的改动），放到暂存目录。
-   - `node tools/build_os_handbook.mjs <判定器目录> <输出目录>` 生成内容与分段 md5。
+   - 两个判定器的源码在 `判定器/`（和云端那份一样）。要改判定器就改这里，一起 commit。
+   - `node tools/build_os_handbook.mjs 判定器 <暂存目录>` 生成内容与分段 md5。
    - 用 Supabase 的 SQL：先写进暂存行 `os_handbook_next`（audience `os`），一段一段追加并核对每段 md5；全部 md5 对上后，再在一条语句里把 `os_handbook` 换成暂存内容并删掉暂存行（`where md5(旧内容) = 原来的 md5`，避免盖掉别人刚改的）。
 3. 回报时说清楚两边都改了。
 

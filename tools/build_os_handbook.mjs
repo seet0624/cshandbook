@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // 生成「数易 · 知行堂」海外门户的云端内容（Supabase cs_docs.os_handbook 的 data.gz）。
 // 用法：node tools/build_os_handbook.mjs <判定器目录> <输出目录>
-//   判定器目录里要有 改线判定器.dc.html、服务中心判定器.dc.html（这两个不放在公开仓库）。
+//   判定器目录一般就是仓库里的 判定器/（改线判定器.dc.html、服务中心判定器.dc.html）。
 //   输出：<输出目录>/os_handbook.b64，以及切成 18200 字的 part.N，方便分段上传后用 md5 核对。
 import fs from 'node:fs';
 import path from 'node:path';
